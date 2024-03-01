@@ -101,6 +101,8 @@ The `preprocessing` directory contains scripts used to preprocess the data (in o
 
 Downloads the EEG signals from the Dreem data set to `~/data/dreem`.
 
+Sample call: `python preprocessing/dreem/download_data.py`
+
 #### prepare_dodh.py
 
 Preprocessing script for the DODH data set.
@@ -111,6 +113,8 @@ Arguments:
 * `-a` or `--annotations_dir`: path to the directory containing the annotations
 * `-o` or `--output_dir`: path to the directory where the preprocessed data should be saved; default is `cache/dodh`
 
+Sample call: `python preprocessing/dreem/prepare_dodh.py -s ~/data/dreem -a ~/data/dreem -o cache/dodh`
+
 #### prepare_dodo.py
 
 Preprocessing script for the DODO data set.
@@ -120,6 +124,8 @@ Arguments:
 * `-s` or `--signals_dir`: path to the directory containing the EEG signals
 * `-a` or `--annotations_dir`: path to the directory containing the annotations
 * `-o` or `--output_dir`: path to the directory where the preprocessed data should be saved; default is `cache/dodo`
+
+Sample call: `python preprocessing/dreem/prepare_dodo.py -s ~/data/dreem -a ~/data/dreem -o cache/dodo`
 
 ### Running and evaluating an experiment
 
@@ -141,6 +147,8 @@ Arguments:
 * `-cn=<experiment group>/<sub-experiment>`: name of experiment to run, for which a `<sub-experiment>.yaml` file has to
   exist in the `config/<experiment group>` directory
 
+Sample call (single run): `python scripts/pretrain.py -cn=exp001/exp001b`
+
 #### fine-tune.py
 
 Performs fine-tuning as specified in the corresponding configuration file, writes its log to the console and saves a log
@@ -154,6 +162,8 @@ Arguments:
 * `-m`: sets the script to the `multirun` mode (see section "Configuration" for details)
 * `-cn=<experiment group>/<sub-experiment>`: name of experiment to run, for which a `<sub-experiment>.yaml` file has to
   exist in the `config/<experiment group>` directory
+
+Sample call (single run): `python scripts/fine-tune.py -cn=exp001/exp001a`
 
 #### pretrain_and_fine-tune.py
 
@@ -170,6 +180,8 @@ Arguments:
 * `-cn=<experiment group>/<sub-experiment>`: name of experiment to run, for which a `<sub-experiment>.yaml` file has to
   exist in the `config/<experiment group>` directory
 
+Sample call (single run): `python scripts/pretrain_and_fine-tune.py -cn=exp001/exp001b`
+
 #### eval_fine-tuned.py
 
 Evaluates a model as specified in the corresponding configuration file, writes its log to the console and saves a log
@@ -183,6 +195,19 @@ Arguments:
 * `-cn=<experiment group>/<sub-experiment>`: name of experiment to run, for which a `<sub-experiment>.yaml` file has to
   exist in the `config/<experiment group>` directory
 
+Sample call (single
+run): `python scripts/eval_fine-tuned.py -cn=exp001/exp001a +model.downstream.path='exp001b-base_fe_clas-2023-10-13_14-21-17-final.pth' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null`
+
+Explanation of the sample call: The `+model.downstream.path` parameter specifies the path to the model checkpoint that
+should
+be evaluated.
+The `+training.downstream.trainer.evaluators.test` parameter specifies the evaluator that should be used for evaluation.
+In this case, we want to evaluate on the test set and use the test evaluator that was defined
+in `exp001/fpt_config.yaml` under the key `evaluators.downstream.test`.
+Since both the model path and the evaluator weren't part of the configuration before, we add them using the `+` prefix.
+The last parameter `model.downstream.feature_extractor.path=null` is used to overwrite the feature extractor path, which
+is not needed for evaluation because we always load the full model.
+
 ### Visualization scripts
 
 The `scripts/visulaization` directory contains scripts used to create the figures used in our paper.
@@ -191,10 +216,14 @@ The `scripts/visulaization` directory contains scripts used to create the figure
 
 Creates sample bar charts that were used in Figure 1 of the paper.
 
+Sample call: `python scripts/visualization/sample_prob_plots.py`
+
 #### visualize_nsubjects_vs_mf1_testdata_cv.py
 
 Creates the plot used in Figure 2 of the paper by reading the results of experiment group exp001 from the `logs`
 directory.
+
+Sample call: `python scripts/visualization/visualize_nsubjects_vs_mf1_testdata_cv.py`
 
 ## Configuration
 

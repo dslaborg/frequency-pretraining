@@ -63,8 +63,9 @@ data:
         subject_ids: ${data.dod_o_h.subject_ids.train}
         # configuration that allows the reduction of the amount of training data (see data_reducer.py for more details)
         data_reducer:
-          _target_: base.data.data_reducer.SubjectWiseDataReducer
+          _target_: base.data.data_reducer.SubjectWiseFixedEpochsDataReducer
           n_subjects: -1
+          n_epochs: -1
           repeat_samples: true
           seed: ${seeds[0]}
         seed: ${seeds[0]}
