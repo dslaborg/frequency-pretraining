@@ -15,8 +15,7 @@ class CyclicCosineDecayLR(LRScheduler):
                  restart_lr_multiplier=None,
                  warmup_epochs=None,
                  warmup_start_lr_multiplier=None,
-                 last_epoch=-1,
-                 verbose=False):
+                 last_epoch=-1):
         """
         Initialize new CyclicCosineDecayLR object.
 
@@ -34,7 +33,6 @@ class CyclicCosineDecayLR(LRScheduler):
         :param warmup_start_lr_multiplier: (float or iterable of floats) - learning rate of optimizer * warmup_start_lr_multiplier
             is learning rate at the beginning of warmup. Must be set if warmup_epochs is not None. Default: None.
         :param last_epoch: (int) - The index of the last epoch. This parameter is used when resuming a training job. Default: -1.
-        :param verbose: (bool) - If True, prints a message to stdout for each update. Default: False.
         """
 
         if not isinstance(init_decay_epochs, int) or init_decay_epochs < 1:
@@ -100,7 +98,7 @@ class CyclicCosineDecayLR(LRScheduler):
             self._restart_lr = [restart_lr_multiplier * base_lrs[i] for i in range(group_num)]
         else:
             self._restart_lr = [restart_lr_multiplier[i] * base_lrs[i] for i in range(group_num)]
-        super(CyclicCosineDecayLR, self).__init__(optimizer, last_epoch, verbose=verbose)
+        super(CyclicCosineDecayLR, self).__init__(optimizer, last_epoch)
 
     def get_lr(self):
         if self._warmup_epochs > 0 and self.last_epoch < self._warmup_epochs:

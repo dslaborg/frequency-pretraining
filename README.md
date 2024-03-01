@@ -46,7 +46,7 @@ required dependencies.
 ```shell
 git clone https://github.com/dslaborg/frequency-pretraining.git
 cd frequency-pretraining
-conda env create -n fpt python=3.10
+conda create -n fpt python=3.10
 conda activate fpt
 
 # install pytorch following the instructions at https://pytorch.org/get-started/locally/
