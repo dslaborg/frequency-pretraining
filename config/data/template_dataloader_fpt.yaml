@@ -1,0 +1,25 @@
+# template config for a dataloader for the dreem datasets
+
+# configuration of standard torch Dataloader
+_target_: torch.utils.data.DataLoader
+batch_size: 64
+shuffle: False
+num_workers: 4
+multiprocessing_context: fork  # necessary for joblib launcher
+
+# configuration of the custom dataset
+dataset:
+  _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+
+  # number of samples to load for this dataset
+  n_samples: ???
+  # number of frequency bins
+  n_freq: ${...n_freqs}
+  # lower bound for the frequency range
+  freq_min: ${...freq_min}
+  # upper bound for the frequency range
+  freq_max: ${...freq_max}
+  # whether to apply random phase shifts to the data
+  do_phase_shifts: ${...do_phase_shifts}
+  # whether to normalize the data
+  normalize: true

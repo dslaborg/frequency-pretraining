@@ -1,0 +1,59 @@
+# base config for all the experiments
+
+defaults:
+  - data/base_dreem@_global_
+  - _self_
+
+# config of hydra log style/path
+hydra:
+  run:
+    # format of timestamp is Year-Month-Day so the folders are ordered correctly
+    dir: ./logs/${hydra.job.config_name}/${now:%Y-%m-%d_%H-%M-%S}
+  job:
+    chdir: True
+  job_logging:
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(levelname)s][%(module)s:%(lineno)d] - %(message)s'
+
+general:
+  # run model on device 'cuda' or 'cpu'
+  device: 'cuda'
+  # if device is 'cuda', specify the gpu ids to use; multiple gpus are only relevant for multiruns with joblib
+  gpus: [ 0 ]
+  # where to save the models after each checkpoint
+  snapshot_dir: './models'
+  # where to save the results of the experiments
+  results_dir: null  # use current working dir
+
+data:
+  # sampling rate of the data
+  sampling_rate: 100
+  # duration of the epochs in seconds
+  epoch_duration: 30
+  # keys are the encodings of the stages in the annotations, values are the names of the stages
+  stages: { 0: 'Wake', 1: 'N1', 2: 'N2', 3: 'N3', 4: 'REM' }
+
+  # dataloaders for pretraining and fine-tuning
+  pretraining:
+    train_dataloader: null
+    valid_dataloader: null
+    test_dataloader: null
+  downstream:
+    train_dataloader: null
+    valid_dataloader: null
+    test_dataloader: null
+
+# model configuration
+model: null
+
+# training configuration for pretraining and fine-tuning
+training:
+  pretraining:
+    lr_scheduler: null
+    optimizer: null
+    trainer: null
+  downstream:
+    lr_scheduler: null
+    optimizer: null
+    trainer: null
