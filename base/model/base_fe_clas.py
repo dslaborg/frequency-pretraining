@@ -22,7 +22,7 @@ class BaseFeClasModel(BaseModel):
         feature_extractor: nn.Module,
         classifier: nn.Module,
         finetune_feature_extractor: bool,
-        seed: int,
+        seed: int = None,
         path: str = None,
     ):
         """

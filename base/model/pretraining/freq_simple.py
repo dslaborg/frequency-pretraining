@@ -8,7 +8,15 @@ from base.model.pretraining.base_pret_fe import BasePretrainingFeatureExtractor
 class SimpleFreqModel(BasePretrainingFeatureExtractor):
     identifier = "simple_multi_class"
 
-    def __init__(self, encoder: nn.Module, encoding_size: int, n_outputs: int, is_pretraining: bool, seed: int, path: str = None):
+    def __init__(
+        self,
+        encoder: nn.Module,
+        encoding_size: int,
+        n_outputs: int,
+        is_pretraining: bool,
+        seed: int = None,
+        path: str = None,
+    ):
         """
         Simple model architecture for the frequency pretraining task. The model consists of a modular encoder and a
         classifier. The classifier is a simple feed forward neural network with two hidden layers and ReLU activation
@@ -29,7 +37,7 @@ class SimpleFreqModel(BasePretrainingFeatureExtractor):
         self.classifier = nn.Sequential(
             nn.Linear(self.encoding_size, 80),
             nn.ReLU(inplace=True),
-            nn.Linear(80, self.n_outputs)
+            nn.Linear(80, self.n_outputs),
         )
 
         self.apply(_weights_init)
