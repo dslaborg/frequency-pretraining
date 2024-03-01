@@ -156,7 +156,7 @@ def get_class_distribution(
     x_indices: list[tuple[str, int, int]],
     y_data: dict[str, np.ndarray],
     left_epochs: int,
-    for_print: bool = False,
+    for_print: bool = True,
 ) -> str | tuple[dict[str, int], dict[str, int]]:
     """
     Returns the distribution of samples per subject and stage.

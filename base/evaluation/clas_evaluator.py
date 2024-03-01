@@ -33,7 +33,7 @@ class ClasEvaluator(BaseEvaluator):
             for data in self.dataloader:
                 features, labels = data
                 features = features.to(_cfg.general.device)
-                labels = labels[:, self.dataloader.dataset.left_epochs, :]
+                labels = labels[:, self.dataloader.dataset.left_epochs]
                 labels = labels.long().flatten().to(_cfg.general.device)
 
                 outputs = model(features)
