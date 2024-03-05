@@ -1,0 +1,23 @@
+# configuration for the nevergrad sweeper
+# the nevergrad sweeper allows you to perform RandomSearches or hyperparameter optimization over a range of values
+# using the nevergrad library
+
+defaults:
+  - override /hydra/sweeper: nevergrad
+
+hydra:
+  sweep:
+    # format of timestamp is Year-Month-Day so the folders are ordered correctly
+    dir: ./logs/${hydra.job.config_name}/sweep-${now:%Y-%m-%d_%H-%M-%S}
+  sweeper:
+    optim:
+      maximize: true
+      # name of the nevergrad optimizer to use
+      # OnePlusOne is good at low budget, but may converge early
+#      optimizer: OnePlusOne
+      # RandomSearch is good at high budget, but may not converge; this is great to get an overview of the search space
+      optimizer: RandomSearch
+      # total number of runs to perform
+      budget: 20
+      # number of parallel workers for performing runs (values higher than 1 didn't work for me)
+      num_workers: 1
