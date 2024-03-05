@@ -1,0 +1,47 @@
+[2024-03-05 09:55:45,605][INFO][eval_fine-tuned:35] - Using GPU 1
+[2024-03-05 09:55:45,613][INFO][eval_fine-tuned:45] - overrides:
+hydra:
+- hydra.launcher.n_jobs=20
+- hydra.mode=MULTIRUN
+task:
+- m_seed_path_sids={path:"exp001b-m51-base_fe_clas-2024-03-02_00-02-17-final.pth",subject_ids:{dod_o_h:$\{data.dod_o_h.cv_5_fold.fold_4\}}}
+- +model.downstream.path=$\{m_seed_path_sids.path\}
+- +training.downstream.trainer.evaluators.test=$\{evaluators.downstream.test\}
+- model.downstream.feature_extractor.path=null
+- general.gpus=[0,1]
+
+[2024-03-05 09:55:45,687][INFO][base_fe_clas:113] - Loading model from exp001b-m51-base_fe_clas-2024-03-02_00-02-17-final.pth
+[2024-03-05 09:55:47,551][INFO][data_loaders:71] - class distribution before data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+1fa6c401-d819-50f5-8146-a0bb9e2b2516: 986
+22bea84c-5d23-5e49-bc2d-9764f883955b: 1048
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+a4568951-bf87-5bbc-bc4f-28e93c360be6: 975
+fc10ee0b-b863-511b-bce8-4dfa7af8ac3a: 910
+
+# samples per stage
+0: 1486
+1: 461
+2: 3828
+3: 1026
+4: 1207
+[2024-03-05 09:55:47,598][INFO][data_loaders:77] - class distribution after data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+1fa6c401-d819-50f5-8146-a0bb9e2b2516: 986
+22bea84c-5d23-5e49-bc2d-9764f883955b: 1048
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+a4568951-bf87-5bbc-bc4f-28e93c360be6: 975
+fc10ee0b-b863-511b-bce8-4dfa7af8ac3a: 910
+
+# samples per stage
+0: 1486
+1: 461
+2: 3828
+3: 1026
+4: 1207
