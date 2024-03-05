@@ -117,7 +117,7 @@ def parse_result_folder(
 
             for run_folder in folder_structure[exp_f][sweep_folder]:
                 # find eval log file in run_folder
-                eval_log_file = glob(join(run_folder, "*downstream*.log"))
+                eval_log_file = glob(join(run_folder, "*.log"))
                 if len(eval_log_file) == 0:
                     print(f"WARNING: no downstream log file found in {run_folder}")
                     continue
@@ -142,7 +142,7 @@ def parse_result_folder(
                 # load all train log files and find the one that contains the model path
                 all_train_log_files = np.concatenate(
                     [
-                        glob(join(f, "train*downstream*.log"))
+                        glob(join(f, "fine-tune.log"))
                         for sw in folder_structure[exp_f].keys()
                         for f in folder_structure[exp_f][sw]
                     ]

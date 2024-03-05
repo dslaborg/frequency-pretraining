@@ -31,7 +31,7 @@ for i in $(seq 0 $((n_runs-1))); do seeds+="[$i,$i,$i,$i,$i],"; done
 seeds=${seeds::-1}
 # start pretraining as a multirun with 15 runs
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
-python scripts/train_ssl.py -cn=exp001/exp001b -m seeds="$seeds" general.gpus=[0,1] hydra.launcher.n_jobs=20
+python scripts/pretrain.py -cn=exp001/exp001b -m seeds="$seeds" general.gpus=[0] hydra.launcher.n_jobs=10
 ```
 
 ## fine-tuning
@@ -70,10 +70,10 @@ m_seed_path_sids="${m_seed_path_sids::-1}"
 #
 # start the fine-tuning phase as multiruns with 3 * 5 * 6 = 90 runs (number of repetitions * number of folds * number of data reductions to explore)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
-python scripts/train_downstream.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/train_downstream.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/train_downstream.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/train_downstream.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0,1] hydra.launcher.n_jobs=20
+python scripts/fine-tune.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
 ```
 
 ## evaluation on test set
@@ -127,21 +127,22 @@ m_seed_path_sids="${m_seed_path_sids::-1}"
 # m_seed_path_sids should look like this: {path:"#exp#-m0-base_fe_clas-#run_name#-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{path:"#exp#-m1-base_fe_clas-#run_name#-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},...
 
 # replace the #exp# and #run_name# placeholders with the actual values for each sub-experiment
-m_seed_path_sids_019a=${m_seed_path_sids//#exp#/exp001a}
-m_seed_path_sids_019a=${m_seed_path_sids_019a//#run_name#/$exp001a_run}
-m_seed_path_sids_019b=${m_seed_path_sids//#exp#/exp001b}
-m_seed_path_sids_019b=${m_seed_path_sids_019b//#run_name#/$exp001b_run}
-m_seed_path_sids_019c=${m_seed_path_sids//#exp#/exp001c}
-m_seed_path_sids_019c=${m_seed_path_sids_019c//#run_name#/$exp001c_run}
-m_seed_path_sids_019d=${m_seed_path_sids//#exp#/exp001d}
-m_seed_path_sids_019d=${m_seed_path_sids_019d//#run_name#/$exp001d_run}
+m_seed_path_sids_001a=${m_seed_path_sids//#exp#/exp001a}
+m_seed_path_sids_001a=${m_seed_path_sids_001a//#run_name#/$exp001a_run}
+m_seed_path_sids_001b=${m_seed_path_sids//#exp#/exp001b}
+m_seed_path_sids_001b=${m_seed_path_sids_001b//#run_name#/$exp001b_run}
+m_seed_path_sids_001c=${m_seed_path_sids//#exp#/exp001c}
+m_seed_path_sids_001c=${m_seed_path_sids_001c//#run_name#/$exp001c_run}
+m_seed_path_sids_001d=${m_seed_path_sids//#exp#/exp001d}
+m_seed_path_sids_001d=${m_seed_path_sids_001d//#run_name#/$exp001d_run}
 
 # start the evaluation on the test set as multiruns with 3 * 5 * 6 = 90 runs (number of repetitions * number of folds * number of data reductions)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
 # the model.downstream.path parameter is added to point towards the model path defined in m_seed_path_sids
+# since we always load the full model, the model.downstream.feature_extractor.path parameter is set to null
 # the training.downstream.trainer.evaluators.test parameter is added to specify the evaluator that should be used for the test set
-python scripts/eval_downstream.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids_019a" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/eval_downstream.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids_019b" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/eval_downstream.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids_019c" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0,1] hydra.launcher.n_jobs=20
-python scripts/eval_downstream.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids_019d" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0,1] hydra.launcher.n_jobs=20
+python scripts/eval_fine-tuned.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids_001a" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/eval_fine-tuned.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids_001b" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/eval_fine-tuned.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids_001c" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/eval_fine-tuned.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids_001d" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
 ```
