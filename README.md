@@ -4,9 +4,7 @@
 
 Implementation of the FPT scheme as described in:
 
-```
-TBD
-```
+> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In *ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024. URL https://openreview.net/forum?id=xOchS6sthY
 
 ## Project Structure
 
