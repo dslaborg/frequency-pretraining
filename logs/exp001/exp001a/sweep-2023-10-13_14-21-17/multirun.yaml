@@ -142,12 +142,12 @@ hydra:
   runtime:
     version: 1.3.2
     version_base: '1.2'
-    cwd: /home/ngr/repos/sleep_freq-pretraining
+    cwd: .
     config_sources:
     - path: hydra.conf
       schema: pkg
       provider: hydra
-    - path: /home/ngr/repos/sleep_freq-pretraining/config
+    - path: ./config
       schema: file
       provider: main
     - path: ''
@@ -262,7 +262,7 @@ data:
     4: REM
   norm_length: epoch
   norm_type: defossez
-  ssl:
+  pretraining:
     train_dataloader:
       _target_: torch.utils.data.DataLoader
       batch_size: 64
@@ -272,10 +272,10 @@ data:
       dataset:
         _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
         n_samples: 100000
-        n_freq: ${data.ssl.n_freqs}
-        freq_min: ${data.ssl.freq_min}
-        freq_max: ${data.ssl.freq_max}
-        do_phase_shifts: ${data.ssl.do_phase_shifts}
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
         normalize: true
         seed: 0
     valid_dataloader:
@@ -286,10 +286,10 @@ data:
       dataset:
         _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
         n_samples: 1000
-        n_freq: ${data.ssl.n_freqs}
-        freq_min: ${data.ssl.freq_min}
-        freq_max: ${data.ssl.freq_max}
-        do_phase_shifts: ${data.ssl.do_phase_shifts}
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
         normalize: true
         seed: 1
     test_dataloader:
@@ -300,10 +300,10 @@ data:
       dataset:
         _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
         n_samples: 1000
-        n_freq: ${data.ssl.n_freqs}
-        freq_min: ${data.ssl.freq_min}
-        freq_max: ${data.ssl.freq_max}
-        do_phase_shifts: ${data.ssl.do_phase_shifts}
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
         normalize: true
         seed: 2
     n_freqs: 20
@@ -904,8 +904,8 @@ general:
   snapshot_dir: ./models
   results_dir: null
 model:
-  ssl:
-    _target_: base.model.ssl.freq_simple.SimpleFreqModel
+  pretraining:
+    _target_: base.model.pretraining.freq_simple.SimpleFreqModel
     encoder:
       _target_: base.model.fe_tinysleepnet.FeTinySleepNet
       filters: 128
@@ -914,17 +914,17 @@ model:
       - 0.5
       seed: ${seeds[1]}
     encoding_size: 512
-    n_outputs: ${data.ssl.n_freqs}
+    n_outputs: ${data.pretraining.n_freqs}
     is_pretraining: true
     seed: ${seeds[1]}
   downstream:
     _target_: base.model.base_fe_clas.BaseFeClasModel
     finetune_feature_extractor: true
     feature_extractor:
-      _target_: ${model.ssl._target_}
-      encoder: ${model.ssl.encoder}
-      encoding_size: ${model.ssl.encoding_size}
-      n_outputs: ${model.ssl.n_outputs}
+      _target_: ${model.pretraining._target_}
+      encoder: ${model.pretraining.encoder}
+      encoding_size: ${model.pretraining.encoding_size}
+      n_outputs: ${model.pretraining.n_outputs}
       is_pretraining: false
       path: null
       seed: ${seeds[2]}
@@ -936,7 +936,7 @@ model:
       bidirectional: true
       seed: ${seeds[2]}
 training:
-  ssl:
+  pretraining:
     lr_scheduler:
       _target_: base.training.lr_scheduler.CyclicCosineDecayLR
       init_decay_epochs: 1
@@ -953,12 +953,12 @@ training:
       _target_: base.training.freq_trainer.FreqTrainer
       epochs: 20
       model: ${model.ssl}
-      dataloader: ${data.ssl.train_dataloader}
+      dataloader: ${data.pretraining.train_dataloader}
       log_interval: 10
       clip_gradients: false
       add_epoch_in_save: false
       evaluators:
-        valid_ssl: ${evaluators.ssl.valid_ssl}
+        valid_pretraining: ${evaluators.pretraining.valid_pretraining}
       seed: ${seeds[3]}
   downstream:
     lr_scheduler:
@@ -997,11 +997,11 @@ m_seed_path_sids:
     dod_o_h: ${data.dod_o_h.hold_out}
 seeds: ${m_seed_path_sids.seeds}
 evaluators:
-  ssl:
-    valid_ssl:
+  pretraining:
+    valid_pretraining:
       _target_: base.evaluation.freq_evaluator.FreqEvaluator
-      dataset: valid_ssl
-      dataloader: ${data.ssl.valid_dataloader}
+      dataset: valid_pretraining
+      dataloader: ${data.pretraining.valid_dataloader}
   downstream:
     train:
       _target_: base.evaluation.clas_evaluator.ClasEvaluator

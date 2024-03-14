@@ -1,6 +1,6 @@
 # exp001
 
-This file describes how to reproduce the results presented in our paper.
+This file describes how to reproduce the results presented in Figure 2 in our paper.
 These results stem from four different training setups, which are grouped together in the experiment `exp001` as
 sub-experiments `exp001a`, `exp001b`, `exp001c`, and `exp001d`.
 
@@ -67,7 +67,7 @@ for i in $(seq 0 $((n_runs-1))); do
 done
 m_seed_path_sids="${m_seed_path_sids::-1}"
 # m_seed_path_sids should look like this: {seeds:[0,0,0,0,0],path:"exp001b-m0-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],path:"exp001b-m1-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},...
-#
+
 # start the fine-tuning phase as multiruns with 3 * 5 * 6 = 90 runs (number of repetitions * number of folds * number of data reductions to explore)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
 python scripts/fine-tune.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
