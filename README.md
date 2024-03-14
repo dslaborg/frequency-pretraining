@@ -2,7 +2,7 @@
 
 ## About The Project
 
-Implementation of the FPT scheme as described in:
+Implementation of Frequency Pretraining (FPT) as described in:
 
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
 
