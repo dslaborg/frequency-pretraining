@@ -4,6 +4,10 @@
 
 Implementation of the FPT scheme as described in:
 
+> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
+
+Part of our work will be presented at the ICLR 2024 Workshop on Learning from Time Series for Health:
+
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In *ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024. URL https://openreview.net/forum?id=xOchS6sthY
 
 ## Project Structure
