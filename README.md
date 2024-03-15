@@ -4,11 +4,14 @@
 
 Implementation of Frequency Pretraining (FPT) as described in:
 
-> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
+> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series
+> Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
 
 Part of our work will be presented at the ICLR 2024 Workshop on Learning from Time Series for Health:
 
-> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In *ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024. URL https://openreview.net/forum?id=xOchS6sthY
+> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In
+*ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024.
+> URL https://openreview.net/forum?id=xOchS6sthY
 
 ## Project Structure
 
@@ -25,6 +28,7 @@ The project is set up as follows:
         * `fpt_config.yaml`: base configuration for the `exp001` experiment group
         * `manual.md`: manual for the `exp001` experiment group, which describes how to run the experiments and evaluate
           the models; the manual is used to reproduce the results of the paper
+    * `exp002/` and `exp003/`: similar to `exp001`, but for a different set of experiments
     * `launcher/`: base config around the launcher that is used by hydra to launch runs
     * `sweeper/`: base config around the sweeper that is used by hydra to sweep over parameter ranges in multiruns
     * `base_config.yaml`: base configuration for all experiments; describes the rough outline of experiment
@@ -88,10 +92,15 @@ pretrain/fine-tune the models according to exp001a-exp001d, and (iv) evaluate th
        of
        the scripts).
     2. Copy all preprocessed datafiles to the `cache/dod_o_h` directory.
-3. Follow the instructions given in the [config/exp001/manual.md](config/exp001/manual.md) file to pretrain and
-   fine-tune
-   the models.
-4. Evaluation on the test set is also described in the [config/exp001/manual.md](config/exp001/manual.md) file.
+3. Follow the instructions given in the manual files of the experiments to pretrain and fine-tune the models.
+    1. `exp001` contains the configuration to reproduce Figure 2 and Figure 4 of the paper. The manual can be found
+       at [config/exp001/manual.md](config/exp001/manual.md).
+    2. `exp002` contains the configuration to reproduce Figure 3 of the paper. The manual can be found
+       at [config/exp002/manual.md](config/exp002/manual.md).
+    3. `exp003` contains the configuration to reproduce the results of a hyperparameter exploration investigating
+       various pretraining parameters (only mentioned
+       shortly in the paper). The manual can be found at [config/exp003/manual.md](config/exp003/manual.md).
+4. Evaluation on the test set is also described in the manual files.
 
 ## Scripts
 
@@ -212,13 +221,27 @@ is not needed for evaluation because we always load the full model.
 
 ### Visualization scripts
 
-The `scripts/visulaization` directory contains scripts used to create the figures used in our paper.
+The `scripts/visualization` directory contains scripts used to create the figures used in our paper.
 
 #### sample_prob_plots.py
 
 Creates sample bar charts that were used in Figure 1 of the paper.
 
 Sample call: `python scripts/visualization/sample_prob_plots.py`
+
+#### visualize_matrix_nepochs_vs_nsubjects_testdata_cv.py
+
+Creates the plot used in Figure 3 of the paper by reading the results of experiment group exp002 from the `logs`
+directory.
+
+Sample call: `python scripts/visualization/visualize_matrix_nepochs_vs_nsubjects_testdata_cv.py`
+
+#### visualize_metrics_pretraining.py
+
+Creates the plot used in Figure 4 of the paper by reading the results of experiment group exp001 from the `logs`
+directory.
+
+Sample call: `python scripts/visualization/visualize_metrics_pretraining.py`
 
 #### visualize_nsubjects_vs_mf1_testdata_cv.py
 
@@ -239,9 +262,10 @@ details).
 
 All configuration files must be placed within the `config` directory.
 The configuration files are organized in a hierarchical structure, where the base configuration is defined in
-`config/base_config.yaml`, the experiment-specific configurations are defined in `config/exp001/fpt_config.yaml`, and
-the
-sub-experiment-specific configurations are defined in `config/exp001/exp001a.yaml`, etc.
+`config/base_config.yaml`, the experiment-specific configurations are defined in the experiment folders (e.g.
+`config/exp001/fpt_config.yaml` for exp001), and the
+sub-experiment-specific configurations are defined in the folders of the sub-experiments (e.g.
+`config/exp001/exp001a.yaml` for exp001a).
 Configuration files that are lower in the hierarchy can overwrite parameters defined in higher-level configuration
 files.
 All configurations can be overwritten using command line arguments when running a script.
@@ -249,6 +273,6 @@ All configurations can be overwritten using command line arguments when running 
 Any parameters or groups of parameters that should be `None`, have to be configured as either `null` or `Null` following
 the YAML definition.
 
-The available parameters are described in the existing configuration files.
+The available parameters are described in the existing configuration files and the doc-strings of the classes.
 To get an overview of the final configuration of a run, it might be helpful to look into the `.hydra` folder in
 the `logs` directory after running a script.

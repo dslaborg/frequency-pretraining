@@ -1,0 +1,1023 @@
+hydra:
+  run:
+    dir: ./logs/${hydra.job.config_name}/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: ./logs/${hydra.job.config_name}/sweep-${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra_plugins.hydra_joblib_launcher.joblib_launcher.JoblibLauncher
+    n_jobs: 20
+    backend: null
+    prefer: processes
+    require: null
+    verbose: 0
+    timeout: null
+    pre_dispatch: 2*n_jobs
+    batch_size: auto
+    temp_folder: null
+    max_nbytes: null
+    mmap_mode: r
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(levelname)s][%(module)s:%(lineno)d] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: MULTIRUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.launcher.n_jobs=20
+    - hydra.mode=MULTIRUN
+    task:
+    - m_seed_path_sids={seeds:[0,0,0,0,0],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[2,2,2,2,2],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[3,3,3,3,3],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[4,4,4,4,4],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}},{seeds:[5,5,5,5,5],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[6,6,6,6,6],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[7,7,7,7,7],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[8,8,8,8,8],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[9,9,9,9,9],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}},{seeds:[10,10,10,10,10],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[11,11,11,11,11],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[12,12,12,12,12],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[13,13,13,13,13],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[14,14,14,14,14],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}}
+    - data.pretraining.log_bins=true,false
+    - general.gpus=[0,1]
+  job:
+    name: pretrain_and_fine-tune
+    chdir: true
+    override_dirname: data.pretraining.log_bins=true,false,general.gpus=[0,1],m_seed_path_sids={seeds:[0,0,0,0,0],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[2,2,2,2,2],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[3,3,3,3,3],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[4,4,4,4,4],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}},{seeds:[5,5,5,5,5],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[6,6,6,6,6],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[7,7,7,7,7],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[8,8,8,8,8],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[9,9,9,9,9],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}},{seeds:[10,10,10,10,10],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[11,11,11,11,11],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},{seeds:[12,12,12,12,12],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_3}}},{seeds:[13,13,13,13,13],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_4}}},{seeds:[14,14,14,14,14],subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_5}}}
+    id: ???
+    num: ???
+    config_name: exp003/exp003a
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.2'
+    cwd: .
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: ./config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: ???
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: joblib
+      hydra/output: default
+  verbose: false
+data:
+  sleepedfx:
+    path: ./cache/sleep-edfx/
+    channels:
+    - EEG Fpz-Cz
+    - EEG Pz-Oz
+    train_subject_ids:
+    - '62'
+    - '15'
+    - '42'
+    - '30'
+    - '56'
+    - '82'
+    - '74'
+    - '66'
+    - '53'
+    - '22'
+    - '07'
+    - '67'
+    - '50'
+    - '44'
+    - '72'
+    - '58'
+    - '18'
+    - '11'
+    - '03'
+    - '38'
+    - '60'
+    - '31'
+    - '09'
+    - '01'
+    - '57'
+    - '35'
+    - '59'
+    - '61'
+    - '77'
+    - '45'
+    - '54'
+    - '46'
+    - '00'
+    - '76'
+    - '71'
+    - '16'
+    - '20'
+    - '81'
+    - '40'
+    - '10'
+    - '70'
+    - '13'
+    - '37'
+    - '43'
+    - '48'
+    - '19'
+    - '75'
+    - '23'
+    - '28'
+    - '34'
+    - '65'
+    - '49'
+    - '47'
+    - '26'
+    valid_subject_ids:
+    - '25'
+    - '06'
+    - '55'
+    - '21'
+    - '29'
+    - '36'
+    - '52'
+    - '64'
+    - '32'
+    - '33'
+    - '02'
+    - '08'
+    test_subject_ids:
+    - '14'
+    - '73'
+    - '27'
+    - '24'
+    - '63'
+    - '05'
+    - '41'
+    - '51'
+    - '17'
+    - '04'
+    - '12'
+    - '80'
+  sampling_rate: 100
+  epoch_duration: 30
+  stages:
+    0: Wake
+    1: N1
+    2: N2
+    3: N3
+    4: REM
+  norm_length: epoch
+  norm_type: defossez
+  pretraining:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 64
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 100000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        log_bins: ${data.pretraining.log_bins}
+        normalize: true
+        seed: 0
+    valid_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 1
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 2
+    n_freqs: 20
+    freq_min: 0.3
+    freq_max: 35
+    do_phase_shifts: true
+    log_bins: true
+  downstream:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 32
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.dod_o_h.subject_ids.train}
+        meta_obj:
+          _target_: base.data.meta_dod.MetaDod
+          scorer: gs
+          data_path: ${data.dod_o_h.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.dod_o_h.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: true
+          left_epochs: ${....left_epochs}
+          seed: ${seeds[0]}
+        seed: ${seeds[0]}
+    valid_dataloader: null
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.dod_o_h.subject_ids.test}
+        meta_obj:
+          _target_: base.data.meta_dod.MetaDod
+          scorer: gs
+          data_path: ${data.dod_o_h.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.dod_o_h.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    earlystopping_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.dod_o_h.subject_ids.valid}
+        meta_obj:
+          _target_: base.data.meta_dod.MetaDod
+          scorer: gs
+          data_path: ${data.dod_o_h.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.dod_o_h.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    left_epochs: 5
+    right_epochs: 5
+  dod_o_h:
+    path: ./cache/dod_o_h
+    channels:
+    - C3_M2
+    - F3_M2
+    - EOG1
+    subject_ids: ${m_seed_path_sids.subject_ids.dod_o_h}
+    hold_out:
+      train:
+      - b3706da5-748b-5dd1-a552-f57e4456cdf6
+      - aadc9e0c-b7c3-5a47-851d-f21971d10935
+      - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+      - eb95076c-c470-56a4-b788-ace310f061c6
+      - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+      - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+      - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+      - a0c91989-530f-5117-80c1-2488dbed683c
+      - 18482adf-1144-54ca-9e35-27f65c43a105
+      - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+      - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+      - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+      - 32556393-bb57-560a-99e8-e09885219647
+      - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+      - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+      - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+      - cebd3520-4e77-5222-a614-d2888e6afc2b
+      - 730aba3b-e310-5be0-9eed-7c3123466834
+      - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+      - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+      - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+      - d5181c33-a43b-5dfe-8ad7-0337facb092a
+      - 16450f5a-9b65-5536-85e1-93816c8b89eb
+      - f66bc75e-778b-5037-af86-b5275cd4c79f
+      - c8110476-594c-533d-95bd-86147fccc987
+      - c985916d-46a5-5c3e-9d50-a5a91f460bac
+      - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+      - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+      - e8ec8ec4-dc48-50ce-985a-a06d87861030
+      - 4b72b905-5521-5c57-b666-e20ff9bb195f
+      - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+      - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+      - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+      - c31a47f9-e400-5841-a22b-521c81042603
+      - 22bea84c-5d23-5e49-bc2d-9764f883955b
+      - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+      - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+      - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+      - 1da3544e-dc5c-5795-adc3-f5068959211f
+      - a25b2296-343b-53f6-8792-ada2669d466e
+      - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+      - 5bf0f969-304c-581e-949c-50c108f62846
+      - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+      - a30245e3-4a71-565f-9636-92e7d2e825fc
+      - 7d778801-88e7-5086-ad1d-70f31a371876
+      - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+      - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+      - 769df255-2284-50b3-8917-2155c759fbbd
+      - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+      - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+      - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+      - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+      - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+      - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+      valid:
+      - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+      - 40e25dd4-6087-5747-b9c2-4838ada86b15
+      - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+      - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+      - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+      - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+      - 100df108-eb57-5eaa-a413-f7e4436a7895
+      - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+      - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+      - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+      - 37d0da97-9ae8-5413-b889-4e843ff35488
+      - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+      - 14c012bd-65b0-56f5-bc74-2dffcea69837
+      test:
+      - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+      - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+      - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+      - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+      - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+      - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+      - e72505f1-21be-5d66-b620-cfcfa2d754bc
+      - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+      - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+      - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+      - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+      - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+      - a4568951-bf87-5bbc-bc4f-28e93c360be6
+    cv_5_fold:
+      fold_1:
+        train:
+        - cebd3520-4e77-5222-a614-d2888e6afc2b
+        - c31a47f9-e400-5841-a22b-521c81042603
+        - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+        - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+        - c985916d-46a5-5c3e-9d50-a5a91f460bac
+        - a0c91989-530f-5117-80c1-2488dbed683c
+        - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+        - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+        - 40e25dd4-6087-5747-b9c2-4838ada86b15
+        - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+        - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+        - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+        - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+        - 37d0da97-9ae8-5413-b889-4e843ff35488
+        - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+        - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+        - c8110476-594c-533d-95bd-86147fccc987
+        - 18482adf-1144-54ca-9e35-27f65c43a105
+        - 32556393-bb57-560a-99e8-e09885219647
+        - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+        - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+        - 730aba3b-e310-5be0-9eed-7c3123466834
+        - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+        - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+        - 1da3544e-dc5c-5795-adc3-f5068959211f
+        - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+        - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+        - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+        - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+        - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+        - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+        - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+        - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+        - eb95076c-c470-56a4-b788-ace310f061c6
+        - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+        - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+        - aadc9e0c-b7c3-5a47-851d-f21971d10935
+        - e8ec8ec4-dc48-50ce-985a-a06d87861030
+        - 769df255-2284-50b3-8917-2155c759fbbd
+        - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+        - 14c012bd-65b0-56f5-bc74-2dffcea69837
+        - a25b2296-343b-53f6-8792-ada2669d466e
+        - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+        - f66bc75e-778b-5037-af86-b5275cd4c79f
+        - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+        - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+        - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+        - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+        - e72505f1-21be-5d66-b620-cfcfa2d754bc
+        - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+        - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+        - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+        - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+        - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+        - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+        - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+        valid:
+        - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+        - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+        - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+        - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+        - a4568951-bf87-5bbc-bc4f-28e93c360be6
+        - a30245e3-4a71-565f-9636-92e7d2e825fc
+        - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+        - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+        test:
+        - d5181c33-a43b-5dfe-8ad7-0337facb092a
+        - b3706da5-748b-5dd1-a552-f57e4456cdf6
+        - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+        - 16450f5a-9b65-5536-85e1-93816c8b89eb
+        - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+        - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+        - 100df108-eb57-5eaa-a413-f7e4436a7895
+        - 4b72b905-5521-5c57-b666-e20ff9bb195f
+        - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+        - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+        - 22bea84c-5d23-5e49-bc2d-9764f883955b
+        - 5bf0f969-304c-581e-949c-50c108f62846
+        - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+        - 7d778801-88e7-5086-ad1d-70f31a371876
+        - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+        - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+      fold_2:
+        train:
+        - d5181c33-a43b-5dfe-8ad7-0337facb092a
+        - b3706da5-748b-5dd1-a552-f57e4456cdf6
+        - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+        - 16450f5a-9b65-5536-85e1-93816c8b89eb
+        - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+        - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+        - 100df108-eb57-5eaa-a413-f7e4436a7895
+        - 4b72b905-5521-5c57-b666-e20ff9bb195f
+        - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+        - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+        - 5bf0f969-304c-581e-949c-50c108f62846
+        - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+        - 7d778801-88e7-5086-ad1d-70f31a371876
+        - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+        - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+        - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+        - c8110476-594c-533d-95bd-86147fccc987
+        - 18482adf-1144-54ca-9e35-27f65c43a105
+        - 32556393-bb57-560a-99e8-e09885219647
+        - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+        - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+        - 730aba3b-e310-5be0-9eed-7c3123466834
+        - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+        - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+        - 1da3544e-dc5c-5795-adc3-f5068959211f
+        - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+        - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+        - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+        - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+        - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+        - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+        - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+        - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+        - eb95076c-c470-56a4-b788-ace310f061c6
+        - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+        - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+        - aadc9e0c-b7c3-5a47-851d-f21971d10935
+        - e8ec8ec4-dc48-50ce-985a-a06d87861030
+        - 769df255-2284-50b3-8917-2155c759fbbd
+        - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+        - 14c012bd-65b0-56f5-bc74-2dffcea69837
+        - a25b2296-343b-53f6-8792-ada2669d466e
+        - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+        - f66bc75e-778b-5037-af86-b5275cd4c79f
+        - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+        - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+        - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+        - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+        - e72505f1-21be-5d66-b620-cfcfa2d754bc
+        - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+        - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+        - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+        - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+        - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+        - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+        - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+        valid:
+        - 22bea84c-5d23-5e49-bc2d-9764f883955b
+        - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+        - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+        - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+        - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+        - a30245e3-4a71-565f-9636-92e7d2e825fc
+        - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+        - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+        test:
+        - cebd3520-4e77-5222-a614-d2888e6afc2b
+        - c31a47f9-e400-5841-a22b-521c81042603
+        - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+        - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+        - c985916d-46a5-5c3e-9d50-a5a91f460bac
+        - a0c91989-530f-5117-80c1-2488dbed683c
+        - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+        - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+        - 40e25dd4-6087-5747-b9c2-4838ada86b15
+        - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+        - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+        - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+        - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+        - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+        - 37d0da97-9ae8-5413-b889-4e843ff35488
+        - a4568951-bf87-5bbc-bc4f-28e93c360be6
+      fold_3:
+        train:
+        - d5181c33-a43b-5dfe-8ad7-0337facb092a
+        - b3706da5-748b-5dd1-a552-f57e4456cdf6
+        - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+        - 16450f5a-9b65-5536-85e1-93816c8b89eb
+        - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+        - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+        - 100df108-eb57-5eaa-a413-f7e4436a7895
+        - 4b72b905-5521-5c57-b666-e20ff9bb195f
+        - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+        - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+        - 5bf0f969-304c-581e-949c-50c108f62846
+        - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+        - 7d778801-88e7-5086-ad1d-70f31a371876
+        - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+        - cebd3520-4e77-5222-a614-d2888e6afc2b
+        - c31a47f9-e400-5841-a22b-521c81042603
+        - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+        - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+        - c985916d-46a5-5c3e-9d50-a5a91f460bac
+        - a0c91989-530f-5117-80c1-2488dbed683c
+        - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+        - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+        - 40e25dd4-6087-5747-b9c2-4838ada86b15
+        - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+        - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+        - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+        - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+        - 37d0da97-9ae8-5413-b889-4e843ff35488
+        - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+        - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+        - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+        - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+        - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+        - eb95076c-c470-56a4-b788-ace310f061c6
+        - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+        - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+        - aadc9e0c-b7c3-5a47-851d-f21971d10935
+        - e8ec8ec4-dc48-50ce-985a-a06d87861030
+        - 769df255-2284-50b3-8917-2155c759fbbd
+        - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+        - 14c012bd-65b0-56f5-bc74-2dffcea69837
+        - a25b2296-343b-53f6-8792-ada2669d466e
+        - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+        - f66bc75e-778b-5037-af86-b5275cd4c79f
+        - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+        - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+        - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+        - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+        - e72505f1-21be-5d66-b620-cfcfa2d754bc
+        - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+        - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+        - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+        - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+        - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+        - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+        - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+        valid:
+        - 22bea84c-5d23-5e49-bc2d-9764f883955b
+        - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+        - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+        - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+        - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+        - a4568951-bf87-5bbc-bc4f-28e93c360be6
+        - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+        - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+        test:
+        - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+        - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+        - c8110476-594c-533d-95bd-86147fccc987
+        - 18482adf-1144-54ca-9e35-27f65c43a105
+        - 32556393-bb57-560a-99e8-e09885219647
+        - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+        - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+        - 730aba3b-e310-5be0-9eed-7c3123466834
+        - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+        - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+        - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+        - 1da3544e-dc5c-5795-adc3-f5068959211f
+        - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+        - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+        - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+        - a30245e3-4a71-565f-9636-92e7d2e825fc
+      fold_4:
+        train:
+        - d5181c33-a43b-5dfe-8ad7-0337facb092a
+        - b3706da5-748b-5dd1-a552-f57e4456cdf6
+        - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+        - 16450f5a-9b65-5536-85e1-93816c8b89eb
+        - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+        - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+        - 100df108-eb57-5eaa-a413-f7e4436a7895
+        - 4b72b905-5521-5c57-b666-e20ff9bb195f
+        - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+        - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+        - 5bf0f969-304c-581e-949c-50c108f62846
+        - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+        - 7d778801-88e7-5086-ad1d-70f31a371876
+        - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+        - cebd3520-4e77-5222-a614-d2888e6afc2b
+        - c31a47f9-e400-5841-a22b-521c81042603
+        - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+        - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+        - c985916d-46a5-5c3e-9d50-a5a91f460bac
+        - a0c91989-530f-5117-80c1-2488dbed683c
+        - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+        - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+        - 40e25dd4-6087-5747-b9c2-4838ada86b15
+        - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+        - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+        - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+        - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+        - 37d0da97-9ae8-5413-b889-4e843ff35488
+        - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+        - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+        - c8110476-594c-533d-95bd-86147fccc987
+        - 18482adf-1144-54ca-9e35-27f65c43a105
+        - 32556393-bb57-560a-99e8-e09885219647
+        - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+        - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+        - 730aba3b-e310-5be0-9eed-7c3123466834
+        - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+        - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+        - 1da3544e-dc5c-5795-adc3-f5068959211f
+        - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+        - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+        - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+        - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+        - f66bc75e-778b-5037-af86-b5275cd4c79f
+        - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+        - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+        - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+        - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+        - e72505f1-21be-5d66-b620-cfcfa2d754bc
+        - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+        - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+        - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+        - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+        - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+        - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+        - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+        valid:
+        - 22bea84c-5d23-5e49-bc2d-9764f883955b
+        - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+        - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+        - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+        - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+        - a4568951-bf87-5bbc-bc4f-28e93c360be6
+        - a30245e3-4a71-565f-9636-92e7d2e825fc
+        - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+        test:
+        - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+        - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+        - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+        - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+        - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+        - eb95076c-c470-56a4-b788-ace310f061c6
+        - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+        - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+        - aadc9e0c-b7c3-5a47-851d-f21971d10935
+        - e8ec8ec4-dc48-50ce-985a-a06d87861030
+        - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+        - 769df255-2284-50b3-8917-2155c759fbbd
+        - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+        - 14c012bd-65b0-56f5-bc74-2dffcea69837
+        - a25b2296-343b-53f6-8792-ada2669d466e
+        - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+      fold_5:
+        train:
+        - d5181c33-a43b-5dfe-8ad7-0337facb092a
+        - b3706da5-748b-5dd1-a552-f57e4456cdf6
+        - 2159377e-ebf3-5565-9014-1e2ae69dc1d2
+        - 16450f5a-9b65-5536-85e1-93816c8b89eb
+        - a79d1f0e-c133-5aa0-8268-cdcc05825f0f
+        - b2d3ccdd-395c-5dd2-81d9-252bcfc0c337
+        - 100df108-eb57-5eaa-a413-f7e4436a7895
+        - 4b72b905-5521-5c57-b666-e20ff9bb195f
+        - 4e3c4ac4-69e2-5347-a3b0-662c204d259d
+        - 79e8a04e-0fdd-53ae-bedc-d49d08e29103
+        - 5bf0f969-304c-581e-949c-50c108f62846
+        - b5d5785d-87ee-5078-b9b9-aac6abd4d8de
+        - 7d778801-88e7-5086-ad1d-70f31a371876
+        - 844f68ba-265e-53e6-bf47-6c85d1804a7b
+        - cebd3520-4e77-5222-a614-d2888e6afc2b
+        - c31a47f9-e400-5841-a22b-521c81042603
+        - e59c45e0-0c0c-565f-84a9-6cf0ec5ef6c1
+        - ad47bc12-199c-5294-9cb8-4351bbbf7b5e
+        - c985916d-46a5-5c3e-9d50-a5a91f460bac
+        - a0c91989-530f-5117-80c1-2488dbed683c
+        - c03e27b0-4cb5-584f-aaea-8f1e1ed6513c
+        - 47f45aa2-31c4-595b-bdb6-f1348bba062b
+        - 40e25dd4-6087-5747-b9c2-4838ada86b15
+        - c11c730f-0b6b-580b-af31-d8f0ebbbdfce
+        - 095d6e40-5f19-55b6-a0ec-6e0ad3793da0
+        - aa160c78-6da3-5e05-8fc9-d6c13e9f97e0
+        - bb474ab0-c2ce-573b-8acd-ef86b0fa26a2
+        - 37d0da97-9ae8-5413-b889-4e843ff35488
+        - e6b7cbef-4c9d-5541-82e8-04810de0fb60
+        - 2e865ca9-e20f-5a6f-bd25-45d28cc9eab9
+        - c8110476-594c-533d-95bd-86147fccc987
+        - 18482adf-1144-54ca-9e35-27f65c43a105
+        - 32556393-bb57-560a-99e8-e09885219647
+        - 6e2aa933-c51c-5a31-8c7b-83da8d076a12
+        - 90aef91a-252f-5ccc-a82e-78ea7ee9ca1f
+        - 730aba3b-e310-5be0-9eed-7c3123466834
+        - 3dd35e7b-d7e2-516d-8a85-e0d58a59569f
+        - a65a9e69-cddf-5711-9a97-de8bfdeb08cc
+        - 1da3544e-dc5c-5795-adc3-f5068959211f
+        - 3e842aa8-bcd9-521e-93a2-72124233fe2c
+        - 0d79f4b1-e74f-5e87-8e42-f9dd7112ada5
+        - 67fa8e29-6f4d-530e-9422-bbc3aca86ed0
+        - a6254c8a-f1b2-5736-b601-18245dd5e0a5
+        - 742f1592-627c-54eb-bbb5-ccd55ffae33a
+        - 02fb158a-a658-51ee-89cf-1e1dc2ebfde1
+        - 5b94ec8a-c34d-5e45-84d1-bec2ea965609
+        - 039ce8ad-a7fa-5272-a3e3-1f4bfebdd087
+        - eb95076c-c470-56a4-b788-ace310f061c6
+        - 83c1394e-9c69-5c11-9102-9ff8d59b1cfd
+        - 03341d0d-5927-5838-8a5f-1b8ef39d8f57
+        - aadc9e0c-b7c3-5a47-851d-f21971d10935
+        - e8ec8ec4-dc48-50ce-985a-a06d87861030
+        - 769df255-2284-50b3-8917-2155c759fbbd
+        - 18ede714-aba3-5ad8-bb1a-18fc9b1c4192
+        - 14c012bd-65b0-56f5-bc74-2dffcea69837
+        - a25b2296-343b-53f6-8792-ada2669d466e
+        valid:
+        - 22bea84c-5d23-5e49-bc2d-9764f883955b
+        - fc10ee0b-b863-511b-bce8-4dfa7af8ac3a
+        - 0416d51f-5d69-5326-b74a-a2e31a96a1ef
+        - b3534fa3-7676-50dc-8412-07f0eff4f7a9
+        - 1fa6c401-d819-50f5-8146-a0bb9e2b2516
+        - a4568951-bf87-5bbc-bc4f-28e93c360be6
+        - a30245e3-4a71-565f-9636-92e7d2e825fc
+        - 25a6b2b0-4d09-561b-82c6-f09bb271d3be
+        test:
+        - cc3b4b63-4a6f-5f28-ac7e-62f83c271449
+        - f66bc75e-778b-5037-af86-b5275cd4c79f
+        - 130f3f52-7d0a-551e-af61-2ee75455e5c9
+        - a35a118e-e65e-5928-92a9-4354a6a0f4ce
+        - 5ddbc68c-1283-5c27-952b-d7f102291bc2
+        - 7f5237b1-2196-5c8a-9543-a5aa70210ef4
+        - e72505f1-21be-5d66-b620-cfcfa2d754bc
+        - 52fbe46b-206c-584a-9f4f-1eb308e07bac
+        - 30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5
+        - 2d01dc34-f36c-562e-b24a-d20dc798fdfc
+        - 6a7503ac-ab3a-5d5b-b474-4b0fe37748dd
+        - 7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf
+        - 64959ac4-53b5-5868-a845-c7476e9fdf7b
+        - d3cadb78-cb8c-5a6e-885c-392e457c68b1
+        - f2a69bdc-ed51-5e3f-b102-6b3f7d392be0
+        - 119f9726-eb4c-5a0e-a7bb-9e15256149a1
+  clamp_value: 20
+general:
+  device: cuda
+  gpus:
+  - 0
+  - 1
+  snapshot_dir: ./models
+  results_dir: null
+model:
+  pretraining:
+    _target_: base.model.pretraining.freq_simple.SimpleFreqModel
+    encoder:
+      _target_: base.model.fe_tinysleepnet.FeTinySleepNet
+      filters: 128
+      dropout:
+      - 0.5
+      - 0.5
+      seed: ${seeds[1]}
+    encoding_size: 512
+    n_outputs: ${data.pretraining.n_freqs}
+    is_pretraining: true
+    seed: ${seeds[1]}
+  downstream:
+    _target_: base.model.base_fe_clas.BaseFeClasModel
+    finetune_feature_extractor: false
+    feature_extractor:
+      _target_: ${model.pretraining._target_}
+      encoder: ${model.pretraining.encoder}
+      encoding_size: ${model.pretraining.encoding_size}
+      n_outputs: ${model.pretraining.n_outputs}
+      is_pretraining: false
+      path: ${m_seed_path_sids.path}
+      seed: ${seeds[2]}
+    classifier:
+      _target_: base.model.clas_tinysleepnet.ClasTinySleepNet
+      feature_size: 512
+      dropout: 0.5
+      hidden_size: 128
+      bidirectional: true
+      seed: ${seeds[2]}
+training:
+  pretraining:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      lr: 0.0001
+    trainer:
+      _target_: base.training.freq_trainer.FreqTrainer
+      epochs: 20
+      model: ${model.ssl}
+      dataloader: ${data.pretraining.train_dataloader}
+      log_interval: 10
+      clip_gradients: false
+      add_epoch_in_save: false
+      evaluators:
+        valid_pretraining: ${evaluators.pretraining.valid_pretraining}
+      seed: ${seeds[3]}
+  downstream:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      weight_decay: 0.001
+    trainer:
+      _target_: base.training.clas_trainer.ClasTrainer
+      epochs: 50
+      clip_gradients: 5.0
+      lr: 0.0001
+      early_stopping_epochs: 10
+      dataloader: ${data.downstream.train_dataloader}
+      model: ${model.downstream}
+      log_interval: 10
+      evaluators:
+        earlystopping: ${evaluators.downstream.earlystopping}
+      seed: ${seeds[4]}
+m_seed_path_sids:
+  seeds:
+  - null
+  - null
+  - null
+  - null
+  - null
+  path: same_run
+  subject_ids:
+    dod_o_h: ${data.dod_o_h.hold_out}
+seeds: ${m_seed_path_sids.seeds}
+evaluators:
+  pretraining:
+    valid_pretraining:
+      _target_: base.evaluation.freq_evaluator.FreqEvaluator
+      dataset: valid_pretraining
+      dataloader: ${data.pretraining.valid_dataloader}
+  downstream:
+    train:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: train
+      dataloader: ${data.downstream.train_dataloader}
+    earlystopping:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: earlystopping
+      dataloader: ${data.downstream.earlystopping_dataloader}
+    test:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: test
+      dataloader: ${data.downstream.test_dataloader}

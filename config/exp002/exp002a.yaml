@@ -1,0 +1,16 @@
+# @package _global_
+# config for a fully supervised training without pretraining
+
+defaults:
+  - fpt_config@_global_
+  - ../sweeper/basic_sweep_config@_global_
+  - ../launcher/joblib_config@_global_
+  - _self_
+
+model:
+  downstream:
+    # training should be fully supervised, so both the FE and the classifier are trained
+    finetune_feature_extractor: True
+    # no pretraining, so the path to the pretrained FE is null --> the FE is randomly initialized
+    feature_extractor:
+      path: null
