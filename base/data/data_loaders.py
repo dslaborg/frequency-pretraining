@@ -52,7 +52,7 @@ class DatasetForSequences(Dataset):
                 axis=1,
                 dtype="float32",
             )
-            self.x_data[s_id] = normalize_epoch(self.x_data[s_id])
+            self.x_data[s_id] = normalize_epoch(self.x_data[s_id], "iqr")
         # format self.x_data: (subj_id: [epoch, channel, datapoints])
 
         # create indices for the dataset, each index is a tuple (subject_id, start_index, end_index) and represents a

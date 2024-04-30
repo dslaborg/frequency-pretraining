@@ -127,7 +127,7 @@ class DatasetForRandomFrequencies(Dataset):
         )
 
         if self.normalize:
-            x = normalize_epoch(x)
+            x = normalize_epoch(x, "zscore")
 
         # create one-hot encoded labels for the chosen frequency bins
         y = np.zeros(self.n_freqs)
