@@ -1,0 +1,95 @@
+[2023-12-19 13:30:26,500][INFO][eval_fine-tuned:25] - Using GPU 0
+[2023-12-19 13:30:26,504][INFO][eval_fine-tuned:35] - overrides:
+hydra:
+- hydra.launcher.n_jobs=10
+- hydra.mode=MULTIRUN
+task:
+- m_seed_path_sids={path:"exp004a-m127-base_fe_clas-2023-10-17_13-13-53-final.pth",subject_ids:{dod_o_h:$\{data.dod_o_h.cv_5_fold.fold_1\}}}
+- +model.downstream.path=$\{m_seed_path_sids.path\}
+- +training.downstream.trainer.evaluators.test=$\{evaluators.downstream.test\}
+- model.downstream.feature_extractor.path=null
+- general.gpus=[0]
+
+[2023-12-19 13:30:26,532][INFO][base_fe_clas:81] - Loading model from exp004a-m127-base_fe_clas-2023-10-17_13-13-53-final.pth
+[2023-12-19 13:30:26,951][INFO][data_loaders:39] - class distribution before data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+25a6b2b0-4d09-561b-82c6-f09bb271d3be: 1063
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+a4568951-bf87-5bbc-bc4f-28e93c360be6: 975
+b3534fa3-7676-50dc-8412-07f0eff4f7a9: 757
+fc10ee0b-b863-511b-bce8-4dfa7af8ac3a: 910
+
+# samples per stage
+0: 1108
+1: 428
+2: 4097
+3: 908
+4: 1253
+[2023-12-19 13:30:26,970][INFO][data_loaders:43] - class distribution after data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+25a6b2b0-4d09-561b-82c6-f09bb271d3be: 1063
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+a4568951-bf87-5bbc-bc4f-28e93c360be6: 975
+b3534fa3-7676-50dc-8412-07f0eff4f7a9: 757
+fc10ee0b-b863-511b-bce8-4dfa7af8ac3a: 910
+
+# samples per stage
+0: 1108
+1: 428
+2: 4097
+3: 908
+4: 1253
+[2023-12-19 13:30:43,671][INFO][eval_fine-tuned:49] - MF1 on dataset "earlystopping": 0.7159
+[2023-12-19 13:30:44,337][INFO][data_loaders:39] - class distribution before data reduction:
+# samples per subject
+100df108-eb57-5eaa-a413-f7e4436a7895: 952
+16450f5a-9b65-5536-85e1-93816c8b89eb: 816
+2159377e-ebf3-5565-9014-1e2ae69dc1d2: 907
+4b72b905-5521-5c57-b666-e20ff9bb195f: 868
+4e3c4ac4-69e2-5347-a3b0-662c204d259d: 926
+5bf0f969-304c-581e-949c-50c108f62846: 947
+79e8a04e-0fdd-53ae-bedc-d49d08e29103: 918
+7d778801-88e7-5086-ad1d-70f31a371876: 999
+844f68ba-265e-53e6-bf47-6c85d1804a7b: 957
+a79d1f0e-c133-5aa0-8268-cdcc05825f0f: 1046
+b2d3ccdd-395c-5dd2-81d9-252bcfc0c337: 902
+b3706da5-748b-5dd1-a552-f57e4456cdf6: 1041
+b5d5785d-87ee-5078-b9b9-aac6abd4d8de: 918
+d5181c33-a43b-5dfe-8ad7-0337facb092a: 977
+
+# samples per stage
+0: 2371
+1: 754
+2: 6484
+3: 1441
+4: 2124
+[2023-12-19 13:30:44,510][INFO][data_loaders:43] - class distribution after data reduction:
+# samples per subject
+100df108-eb57-5eaa-a413-f7e4436a7895: 952
+16450f5a-9b65-5536-85e1-93816c8b89eb: 816
+2159377e-ebf3-5565-9014-1e2ae69dc1d2: 907
+4b72b905-5521-5c57-b666-e20ff9bb195f: 868
+4e3c4ac4-69e2-5347-a3b0-662c204d259d: 926
+5bf0f969-304c-581e-949c-50c108f62846: 947
+79e8a04e-0fdd-53ae-bedc-d49d08e29103: 918
+7d778801-88e7-5086-ad1d-70f31a371876: 999
+844f68ba-265e-53e6-bf47-6c85d1804a7b: 957
+a79d1f0e-c133-5aa0-8268-cdcc05825f0f: 1046
+b2d3ccdd-395c-5dd2-81d9-252bcfc0c337: 902
+b3706da5-748b-5dd1-a552-f57e4456cdf6: 1041
+b5d5785d-87ee-5078-b9b9-aac6abd4d8de: 918
+d5181c33-a43b-5dfe-8ad7-0337facb092a: 977
+
+# samples per stage
+0: 2371
+1: 754
+2: 6484
+3: 1441
+4: 2124
+[2023-12-19 13:31:12,362][INFO][eval_fine-tuned:49] - MF1 on dataset "test": 0.6594

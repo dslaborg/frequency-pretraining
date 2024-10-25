@@ -1,0 +1,934 @@
+hydra:
+  run:
+    dir: ./logs/${hydra.job.config_name}/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: ./logs/${hydra.job.config_name}/sweep-${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra_plugins.hydra_joblib_launcher.joblib_launcher.JoblibLauncher
+    n_jobs: 40
+    backend: null
+    prefer: processes
+    require: null
+    verbose: 0
+    timeout: null
+    pre_dispatch: 2*n_jobs
+    batch_size: auto
+    temp_folder: null
+    max_nbytes: null
+    mmap_mode: r
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(levelname)s][%(module)s:%(lineno)d] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: MULTIRUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.launcher.n_jobs=40
+    - hydra.mode=MULTIRUN
+    task:
+    - m_seed_path_sids={path:"exp005c-m0-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m1-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m2-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m3-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m4-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m5-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m6-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m7-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m8-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m9-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m10-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m11-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m12-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m13-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m14-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m15-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m16-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m17-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m18-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m19-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m20-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m21-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m22-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m23-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m24-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m25-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m26-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m27-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m28-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m29-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m30-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m31-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m32-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m33-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m34-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m35-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m36-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m37-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m38-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m39-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m40-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m41-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m42-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m43-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m44-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m45-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m46-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m47-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m48-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m49-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m50-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m51-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m52-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m53-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m54-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m55-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m56-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m57-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m58-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m59-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m60-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m61-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m62-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m63-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m64-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m65-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m66-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m67-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m68-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m69-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m70-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m71-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m72-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m73-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m74-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m75-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m76-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m77-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m78-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m79-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m80-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m81-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m82-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m83-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m84-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m85-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m86-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m87-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m88-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m89-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m90-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m91-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m92-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m93-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m94-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m95-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m96-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m97-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m98-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m99-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m100-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m101-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m102-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m103-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m104-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m105-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m106-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m107-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m108-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m109-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m110-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m111-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m112-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m113-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m114-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m115-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m116-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m117-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m118-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m119-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m120-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m121-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m122-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m123-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m124-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m125-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m126-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m127-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m128-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m129-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m130-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m131-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m132-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m133-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m134-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m135-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m136-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m137-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m138-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m139-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m140-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m141-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m142-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m143-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m144-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m145-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m146-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m147-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m148-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m149-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m150-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m151-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m152-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m153-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m154-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m155-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m156-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m157-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m158-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m159-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m160-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m161-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m162-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m163-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m164-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m165-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m166-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m167-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m168-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m169-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m170-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m171-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m172-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m173-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m174-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m175-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m176-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m177-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m178-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m179-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m180-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m181-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m182-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m183-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m184-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m185-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m186-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m187-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m188-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m189-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m190-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m191-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m192-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m193-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m194-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m195-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m196-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m197-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m198-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m199-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m200-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m201-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m202-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m203-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m204-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m205-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m206-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m207-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m208-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m209-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m210-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m211-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m212-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m213-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m214-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m215-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m216-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m217-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m218-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m219-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m220-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m221-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m222-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m223-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m224-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m225-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m226-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m227-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m228-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m229-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m230-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m231-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m232-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m233-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m234-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m235-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m236-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m237-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m238-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m239-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m240-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m241-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m242-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m243-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m244-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m245-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m246-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m247-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m248-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m249-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m250-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m251-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m252-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m253-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m254-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m255-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m256-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m257-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m258-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m259-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m260-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m261-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m262-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m263-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m264-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m265-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m266-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m267-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m268-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m269-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m270-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m271-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m272-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m273-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m274-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m275-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m276-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m277-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m278-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m279-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m280-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m281-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m282-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m283-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m284-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m285-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m286-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m287-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m288-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m289-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m290-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m291-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m292-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m293-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m294-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m295-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m296-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m297-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m298-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m299-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m300-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m301-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m302-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m303-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m304-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m305-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m306-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m307-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m308-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m309-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m310-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m311-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m312-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m313-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m314-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m315-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m316-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m317-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m318-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m319-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m320-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m321-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m322-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m323-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m324-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m325-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m326-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m327-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m328-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m329-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m330-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m331-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m332-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m333-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m334-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m335-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m336-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m337-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m338-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m339-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m340-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m341-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m342-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m343-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m344-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m345-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m346-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m347-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m348-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m349-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m350-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m351-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m352-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m353-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m354-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m355-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m356-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m357-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m358-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m359-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m360-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m361-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m362-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m363-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m364-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m365-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m366-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m367-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m368-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m369-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m370-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m371-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m372-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m373-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m374-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}}
+    - +model.downstream.path=${m_seed_path_sids.path}
+    - +training.downstream.trainer.evaluators.test=${evaluators.downstream.test}
+    - model.downstream.feature_extractor.path=null
+    - general.gpus=[0,1,2,3]
+  job:
+    name: eval_fine-tuned
+    chdir: true
+    override_dirname: +model.downstream.path=${m_seed_path_sids.path},+training.downstream.trainer.evaluators.test=${evaluators.downstream.test},general.gpus=[0,1,2,3],m_seed_path_sids={path:"exp005c-m0-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m1-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m2-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m3-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m4-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m5-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m6-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m7-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m8-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m9-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m10-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m11-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m12-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m13-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m14-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m15-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m16-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m17-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m18-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m19-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m20-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m21-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m22-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m23-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m24-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m25-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m26-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m27-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m28-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m29-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m30-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m31-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m32-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m33-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m34-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m35-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m36-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m37-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m38-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m39-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m40-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m41-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m42-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m43-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m44-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m45-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m46-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m47-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m48-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m49-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m50-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m51-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m52-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m53-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m54-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m55-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m56-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m57-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m58-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m59-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m60-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m61-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m62-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m63-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m64-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m65-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m66-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m67-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m68-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m69-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m70-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m71-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m72-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m73-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m74-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m75-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m76-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m77-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m78-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m79-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m80-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m81-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m82-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m83-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m84-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m85-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m86-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m87-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m88-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m89-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m90-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m91-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m92-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m93-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m94-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m95-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m96-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m97-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m98-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m99-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m100-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m101-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m102-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m103-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m104-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m105-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m106-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m107-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m108-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m109-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m110-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m111-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m112-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m113-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m114-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m115-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m116-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m117-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m118-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m119-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m120-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m121-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m122-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m123-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m124-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m125-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m126-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m127-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m128-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m129-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m130-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m131-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m132-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m133-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m134-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m135-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m136-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m137-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m138-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m139-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m140-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m141-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m142-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m143-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m144-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m145-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m146-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m147-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m148-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m149-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m150-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m151-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m152-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m153-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m154-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m155-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m156-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m157-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m158-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m159-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m160-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m161-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m162-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m163-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m164-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m165-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m166-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m167-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m168-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m169-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m170-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m171-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m172-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m173-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m174-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m175-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m176-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m177-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m178-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m179-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m180-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m181-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m182-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m183-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m184-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m185-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m186-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m187-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m188-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m189-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m190-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m191-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m192-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m193-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m194-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m195-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m196-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m197-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m198-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m199-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m200-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m201-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m202-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m203-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m204-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m205-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m206-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m207-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m208-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m209-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m210-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m211-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m212-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m213-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m214-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m215-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m216-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m217-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m218-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m219-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m220-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m221-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m222-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m223-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m224-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m225-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m226-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m227-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m228-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m229-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m230-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m231-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m232-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m233-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m234-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m235-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m236-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m237-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m238-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m239-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m240-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m241-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m242-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m243-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m244-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m245-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m246-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m247-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m248-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m249-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m250-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m251-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m252-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m253-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m254-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m255-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m256-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m257-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m258-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m259-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m260-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m261-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m262-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m263-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m264-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m265-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m266-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m267-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m268-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m269-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m270-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m271-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m272-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m273-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m274-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp005c-m275-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m276-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m277-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m278-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m279-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m280-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m281-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m282-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m283-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m284-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m285-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m286-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m287-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m288-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m289-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m290-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m291-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m292-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m293-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m294-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m295-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m296-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m297-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m298-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m299-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp005c-m300-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m301-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m302-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m303-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m304-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m305-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m306-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m307-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m308-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m309-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m310-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m311-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m312-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m313-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m314-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m315-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m316-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m317-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m318-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m319-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m320-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m321-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m322-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m323-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m324-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp005c-m325-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m326-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m327-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m328-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m329-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m330-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m331-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m332-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m333-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m334-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m335-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m336-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m337-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m338-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m339-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m340-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m341-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m342-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m343-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m344-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m345-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m346-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m347-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m348-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m349-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp005c-m350-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m351-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m352-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m353-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m354-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m355-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m356-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m357-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m358-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m359-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m360-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m361-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m362-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m363-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m364-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m365-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m366-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m367-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m368-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m369-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m370-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m371-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m372-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m373-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp005c-m374-base_fe_clas-2024-10-04_03-09-39-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},model.downstream.feature_extractor.path=null
+    id: ???
+    num: ???
+    config_name: exp005/exp005c
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.4.0.dev1
+    version_base: '1.2'
+    cwd: XXX/frequency-pretraining
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: XXX/frequency-pretraining/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: ???
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: joblib
+      hydra/output: default
+  verbose: false
+data:
+  sleepedfx:
+    path: ./cache/sleep-edfx/
+    channels:
+    - EEG Fpz-Cz
+    - EEG Pz-Oz
+    - EOG horizontal
+    subject_ids: ${m_seed_path_sids.subject_ids.sleepedfx}
+    hold_out:
+      train:
+      - '62'
+      - '15'
+      - '42'
+      - '30'
+      - '56'
+      - '82'
+      - '74'
+      - '66'
+      - '53'
+      - '22'
+      - '07'
+      - '67'
+      - '50'
+      - '44'
+      - '72'
+      - '58'
+      - '18'
+      - '11'
+      - '03'
+      - '38'
+      - '60'
+      - '31'
+      - '09'
+      - '01'
+      - '57'
+      - '35'
+      - '59'
+      - '61'
+      - '77'
+      - '45'
+      - '54'
+      - '46'
+      - '00'
+      - '76'
+      - '71'
+      - '16'
+      - '20'
+      - '81'
+      - '40'
+      - '10'
+      - '70'
+      - '13'
+      - '37'
+      - '43'
+      - '48'
+      - '19'
+      - '75'
+      - '23'
+      - '28'
+      - '34'
+      - '65'
+      - '49'
+      - '47'
+      - '26'
+      valid:
+      - '25'
+      - '06'
+      - '55'
+      - '21'
+      - '29'
+      - '36'
+      - '52'
+      - '64'
+      - '32'
+      - '33'
+      - '02'
+      - '08'
+      test:
+      - '14'
+      - '73'
+      - '27'
+      - '24'
+      - '63'
+      - '05'
+      - '41'
+      - '51'
+      - '17'
+      - '04'
+      - '12'
+      - '80'
+    cv_5_fold:
+      fold_1:
+        train:
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        test_validation:
+        - '11'
+        - '46'
+      fold_2:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        test_validation:
+        - '33'
+        - '29'
+      fold_3:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        test_validation:
+        - '40'
+        - '81'
+      fold_4:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '76'
+        - '02'
+        test:
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        test_validation:
+        - '07'
+        - '42'
+      fold_5:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        test:
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        test_validation:
+        - '76'
+        - '02'
+  sampling_rate: 100
+  epoch_duration: 30
+  stages:
+    0: Wake
+    1: N1
+    2: N2
+    3: N3
+    4: REM
+  norm_length: epoch
+  norm_type: defossez
+  pretraining:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 64
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 100000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 0
+    valid_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 1
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 2
+    n_freqs: 20
+    freq_min: 0.3
+    freq_max: 35
+    do_phase_shifts: true
+  downstream:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 32
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.train}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.SubjectWiseFixedEpochsDataReducer
+          data_fraction: 1.0
+          repeat_samples: true
+          left_epochs: ${....left_epochs}
+          n_subjects: -1
+          n_epochs: -1
+          seed: ${seeds[0]}
+        seed: ${seeds[0]}
+    valid_dataloader: null
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.test}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    earlystopping_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.valid}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    left_epochs: 5
+    right_epochs: 5
+  clamp_value: 20
+general:
+  device: cuda
+  gpus:
+  - 0
+  - 1
+  - 2
+  - 3
+  snapshot_dir: ./models
+  results_dir: null
+model:
+  pretraining:
+    _target_: base.model.pretraining.freq_simple.SimpleFreqModel
+    encoder:
+      _target_: base.model.fe_tinysleepnet.FeTinySleepNet
+      filters: 128
+      dropout:
+      - 0.5
+      - 0.5
+      seed: ${seeds[1]}
+    encoding_size: 512
+    n_outputs: ${data.pretraining.n_freqs}
+    is_pretraining: true
+    seed: ${seeds[1]}
+  downstream:
+    _target_: base.model.base_fe_clas.BaseFeClasModel
+    finetune_feature_extractor: true
+    feature_extractor:
+      _target_: ${model.pretraining._target_}
+      encoder: ${model.pretraining.encoder}
+      encoding_size: ${model.pretraining.encoding_size}
+      n_outputs: ${model.pretraining.n_outputs}
+      is_pretraining: false
+      path: null
+      seed: ${seeds[2]}
+    classifier:
+      _target_: base.model.clas_tinysleepnet.ClasTinySleepNet
+      feature_size: 512
+      dropout: 0.5
+      hidden_size: 128
+      bidirectional: true
+      seed: ${seeds[2]}
+    path: ${m_seed_path_sids.path}
+training:
+  pretraining:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      lr: 0.0001
+    trainer:
+      _target_: base.training.freq_trainer.FreqTrainer
+      epochs: 20
+      model: ${model.pretraining}
+      dataloader: ${data.pretraining.train_dataloader}
+      log_interval: 10
+      clip_gradients: false
+      add_epoch_in_save: false
+      evaluators:
+        valid_pretraining: ${evaluators.pretraining.valid_pretraining}
+      seed: ${seeds[3]}
+  downstream:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      weight_decay: 0.001
+    trainer:
+      _target_: base.training.clas_trainer.ClasTrainer
+      epochs: 50
+      clip_gradients: 5.0
+      lr: 0.0001
+      early_stopping_epochs: 10
+      dataloader: ${data.downstream.train_dataloader}
+      model: ${model.downstream}
+      log_interval: 10
+      evaluators:
+        earlystopping: ${evaluators.downstream.earlystopping}
+        test: ${evaluators.downstream.test}
+      seed: ${seeds[4]}
+m_seed_path_sids:
+  seeds:
+  - null
+  - null
+  - null
+  - null
+  - null
+  path: same_run
+  subject_ids:
+    sleepedfx: ${data.sleepedfx.hold_out}
+seeds: ${m_seed_path_sids.seeds}
+evaluators:
+  pretraining:
+    valid_pretraining:
+      _target_: base.evaluation.freq_evaluator.FreqEvaluator
+      dataset: valid_pretraining
+      dataloader: ${data.pretraining.valid_dataloader}
+  downstream:
+    train:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: train
+      dataloader: ${data.downstream.train_dataloader}
+    earlystopping:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: earlystopping
+      dataloader: ${data.downstream.earlystopping_dataloader}
+    test:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: test
+      dataloader: ${data.downstream.test_dataloader}
+      log_subjects: true

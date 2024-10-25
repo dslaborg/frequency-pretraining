@@ -1,0 +1,13 @@
+# @package _global_
+# config for an experiment with pretraining + fine-tuning, both the FE and the classifier are trained during fine-tuning
+
+defaults:
+  - fpt_config@_global_
+  - ../sweeper/basic_sweep_config@_global_
+  - ../launcher/joblib_config@_global_
+  - _self_
+
+model:
+  downstream:
+    # also fine-tune the feature extractor
+    finetune_feature_extractor: True

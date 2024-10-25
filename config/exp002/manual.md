@@ -1,11 +1,13 @@
 # exp002
 
-This file describes how to reproduce the results presented in Figure 3 in our paper.
-These results stem from two different training setups, which are grouped together in the experiment `exp002` as
-sub-experiments `exp002a` and `exp002b`.
+This file describes how to reproduce the results presented in Figure 2 and 3 in our paper.
+These results stem from four different training setups, which are grouped together in the experiment `exp002` as
+sub-experiments `exp002a`, `exp002b`, `exp002c`, and `exp002d`.
 
 - `exp002a`: Fully Supervised
-- `exp002b`: Fine-Tuned Feature Extractor
+- `exp002b`: Fixed Feature Extractor
+- `exp002c`: Fine-Tuned Feature Extractor
+- `exp002d`: Untrained Feature Extractor
 
 In all training setups, a 5-fold cross-validation is performed.
 To simplify the training code, cross-validation is not performed within the python code, but rather through separate
@@ -17,7 +19,8 @@ Each training run uses a different pretrained model, but the pretrained models a
 
 ## pretraining
 
-We only need to perform pretraining for exp002b.
+We only need to perform pretraining for one training setup (either exp002b or exp002c), since the pretrained models are
+shared between training setups.
 
 ```bash
 # number of pretraining runs with different seeds
@@ -33,7 +36,7 @@ python scripts/pretrain.py -cn=exp002/exp002b -m seeds="$seeds" general.gpus=[0]
 
 ## fine-tuning
 
-After pretraining, we can start the fine-tuning phase for the two training setups.
+After pretraining, we can start the fine-tuning phase for all four training setups.
 The script below needs to be modified slightly to match the actual model paths, which are dependent on the timestamp of
 the pretraining runs.
 You can find the actual model paths in the logs of the pretraining runs.
@@ -57,18 +60,20 @@ for i in $(seq 0 $((n_runs-1))); do
     # replace the placeholder with the actual index of the pretraining run, which is the same as the seed
     model_path=${base_model_path//###/${seed_base}}
     # define the fold of the cross-validation scheme
-    subject_ids="\${data.dod_o_h.cv_5_fold.fold_${j}}"
+    subject_ids="\${data.sleepedfx.cv_5_fold.fold_${j}}"
     # create a dict that will be used to overwrite the m_seed_path_sids parameter in the config
-    m_seed_path_sids+="{seeds:${seed},path:\"$model_path\",subject_ids:{dod_o_h:${subject_ids}}},"
+    m_seed_path_sids+="{seeds:${seed},path:\"$model_path\",subject_ids:{sleepedfx:${subject_ids}}},"
   done
 done
 m_seed_path_sids="${m_seed_path_sids::-1}"
-# m_seed_path_sids should look like this: {seeds:[0,0,0,0,0],path:"exp002b-m0-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],path:"exp002b-m1-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},...
+# m_seed_path_sids should look like this: {seeds:[0,0,0,0,0],path:"exp002b-m0-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],path:"exp002b-m1-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},...
 
-# start the fine-tuning phase as multiruns with 3 * 5 * 5 * 5 = 375 runs (number of repetitions * number of folds * number of n_subject values * number of n_epochs values)
+# start the fine-tuning phase as multiruns with 3 * 5 = 15 runs (number of repetitions * number of folds)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
-python scripts/fine-tune.py -cn=exp002/exp002a -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_epochs=-1,50,130,340,900 data.downstream.train_dataloader.dataset.data_reducer.n_subjects=1,2,3,4,5 general.gpus=[0] hydra.launcher.n_jobs=10
-python scripts/fine-tune.py -cn=exp002/exp002b -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_epochs=-1,50,130,340,900 data.downstream.train_dataloader.dataset.data_reducer.n_subjects=1,2,3,4,5 general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp002/exp002a -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp002/exp002b -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp002/exp002c -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp002/exp002d -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
 ```
 
 ## evaluation on test set
@@ -86,10 +91,12 @@ You only need to modify the `<timestamp>` placeholders in the script below.
 # since each sub-experiment is fine-tuned separately, the timestamps are different for each sub-experiment
 exp002a_run='<timestamp>'
 exp002b_run='<timestamp>'
+exp002c_run='<timestamp>'
+exp002d_run='<timestamp>'
 
 # base model path points to the best models from the fine-tuning phase
 # placeholders, that are replaced by the actual values in the loop (DO NOT MODIFY):
-# #exp#: sub-experiment name (exp002a, exp002b)
+# #exp#: sub-experiment name (exp002a, exp002b, exp002c, exp002d)
 # #run_index#: index of the fine-tuning run
 # #run_name#: timestamp of the fine-tuning run
 base_model_path='#exp#-m#run_index#-base_fe_clas-#run_name#-final.pth'
@@ -98,37 +105,40 @@ base_model_path='#exp#-m#run_index#-base_fe_clas-#run_name#-final.pth'
 n_runs=3
 # number of folds in the cross-validation scheme
 n_folds=5
-# number of data reductions that were explored during the fine-tuning phase
-n_data_reductions=25  # 5 n_subjects values * 5 n_epochs values
 m_seed_path_sids=''
 i_run=0
 for i in $(seq 0 $((n_runs-1))); do
   for j in $(seq 1 $((n_folds))); do
-    for k in $(seq 1 $((n_data_reductions))); do
-      # replace the run_index placeholder with the actual index of the fine-tuning run
-      model_path=${base_model_path//#run_index#/$((i_run))}
-      # specify the fold of the cross-validation scheme
-      subject_ids="\${data.dod_o_h.cv_5_fold.fold_${j}}"
-      # create a dict that will be used to overwrite the m_seed_path_sids parameter in the config
-      m_seed_path_sids+="{path:\"$model_path\",subject_ids:{dod_o_h:${subject_ids}}},"
-      # increment the run_index for each repetition, fold, and data reduction
-      i_run=$((i_run+1))
-    done
+    # replace the run_index placeholder with the actual index of the fine-tuning run
+    model_path=${base_model_path//#run_index#/$((i_run))}
+    # specify the fold of the cross-validation scheme
+    subject_ids="\${data.sleepedfx.cv_5_fold.fold_${j}}"
+    # create a dict that will be used to overwrite the m_seed_path_sids parameter in the config
+    m_seed_path_sids+="{path:\"$model_path\",subject_ids:{sleepedfx:${subject_ids}}},"
+    # increment the run_index for each repetition, fold, and data reduction
+    i_run=$((i_run+1))
   done
 done
 m_seed_path_sids="${m_seed_path_sids::-1}"
-# m_seed_path_sids should look like this: {path:"#exp#-m0-base_fe_clas-#run_name#-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{path:"#exp#-m1-base_fe_clas-#run_name#-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},...
+# m_seed_path_sids should look like this: {path:"#exp#-m0-base_fe_clas-#run_name#-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"#exp#-m1-base_fe_clas-#run_name#-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},...
 
+# replace the #exp# and #run_name# placeholders with the actual values for each sub-experiment
 m_seed_path_sids_002a=${m_seed_path_sids//#exp#/exp002a}
 m_seed_path_sids_002a=${m_seed_path_sids_002a//#run_name#/$exp002a_run}
 m_seed_path_sids_002b=${m_seed_path_sids//#exp#/exp002b}
 m_seed_path_sids_002b=${m_seed_path_sids_002b//#run_name#/$exp002b_run}
+m_seed_path_sids_002c=${m_seed_path_sids//#exp#/exp002c}
+m_seed_path_sids_002c=${m_seed_path_sids_002c//#run_name#/$exp002c_run}
+m_seed_path_sids_002d=${m_seed_path_sids//#exp#/exp002d}
+m_seed_path_sids_002d=${m_seed_path_sids_002d//#run_name#/$exp002d_run}
 
-# start the evaluation on the test set as multiruns with 3 * 5 * 5 * 5 = 375 runs (number of repetitions * number of folds * number of n_subject values * number of n_epochs values)
+# start the evaluation on the test set as multiruns with 3 * 5 = 15 runs (number of repetitions * number of folds)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
 # the model.downstream.path parameter is added to point towards the model path defined in m_seed_path_sids
 # since we always load the full model, the model.downstream.feature_extractor.path parameter is set to null
 # the training.downstream.trainer.evaluators.test parameter is added to specify the evaluator that should be used for the test set
 python scripts/eval_fine-tuned.py -cn=exp002/exp002a -m m_seed_path_sids="$m_seed_path_sids_002a" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
 python scripts/eval_fine-tuned.py -cn=exp002/exp002b -m m_seed_path_sids="$m_seed_path_sids_002b" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/eval_fine-tuned.py -cn=exp002/exp002c -m m_seed_path_sids="$m_seed_path_sids_002c" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/eval_fine-tuned.py -cn=exp002/exp002d -m m_seed_path_sids="$m_seed_path_sids_002d" +model.downstream.path='${m_seed_path_sids.path}' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null general.gpus=[0] hydra.launcher.n_jobs=10
 ```

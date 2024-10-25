@@ -1,0 +1,933 @@
+hydra:
+  run:
+    dir: ./logs/${hydra.job.config_name}/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: ./logs/${hydra.job.config_name}/sweep-${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra_plugins.hydra_joblib_launcher.joblib_launcher.JoblibLauncher
+    n_jobs: 40
+    backend: null
+    prefer: processes
+    require: null
+    verbose: 0
+    timeout: null
+    pre_dispatch: 2*n_jobs
+    batch_size: auto
+    temp_folder: null
+    max_nbytes: null
+    mmap_mode: r
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(levelname)s][%(module)s:%(lineno)d] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: MULTIRUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.launcher.n_jobs=40
+    - hydra.mode=MULTIRUN
+    task:
+    - m_seed_path_sids={path:"exp002b-m0-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m1-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m2-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m3-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m4-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp002b-m5-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m6-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m7-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m8-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m9-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp002b-m10-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m11-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m12-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m13-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m14-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}}
+    - +model.downstream.path=${m_seed_path_sids.path}
+    - +training.downstream.trainer.evaluators.test=${evaluators.downstream.test}
+    - model.downstream.feature_extractor.path=null
+    - general.gpus=[0,1,2,3]
+  job:
+    name: eval_fine-tuned
+    chdir: true
+    override_dirname: +model.downstream.path=${m_seed_path_sids.path},+training.downstream.trainer.evaluators.test=${evaluators.downstream.test},general.gpus=[0,1,2,3],m_seed_path_sids={path:"exp002b-m0-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m1-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m2-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m3-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m4-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp002b-m5-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m6-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m7-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m8-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m9-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},{path:"exp002b-m10-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_1}}},{path:"exp002b-m11-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_2}}},{path:"exp002b-m12-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_3}}},{path:"exp002b-m13-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_4}}},{path:"exp002b-m14-base_fe_clas-2024-10-01_18-43-17-final.pth",subject_ids:{sleepedfx:${data.sleepedfx.cv_5_fold.fold_5}}},model.downstream.feature_extractor.path=null
+    id: ???
+    num: ???
+    config_name: exp002/exp002b
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.4.0.dev1
+    version_base: '1.2'
+    cwd: XXX/frequency-pretraining
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: XXX/frequency-pretraining/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: ???
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: joblib
+      hydra/output: default
+  verbose: false
+data:
+  sleepedfx:
+    path: ./cache/sleep-edfx/
+    channels:
+    - EEG Fpz-Cz
+    - EEG Pz-Oz
+    - EOG horizontal
+    subject_ids: ${m_seed_path_sids.subject_ids.sleepedfx}
+    hold_out:
+      train:
+      - '62'
+      - '15'
+      - '42'
+      - '30'
+      - '56'
+      - '82'
+      - '74'
+      - '66'
+      - '53'
+      - '22'
+      - '07'
+      - '67'
+      - '50'
+      - '44'
+      - '72'
+      - '58'
+      - '18'
+      - '11'
+      - '03'
+      - '38'
+      - '60'
+      - '31'
+      - '09'
+      - '01'
+      - '57'
+      - '35'
+      - '59'
+      - '61'
+      - '77'
+      - '45'
+      - '54'
+      - '46'
+      - '00'
+      - '76'
+      - '71'
+      - '16'
+      - '20'
+      - '81'
+      - '40'
+      - '10'
+      - '70'
+      - '13'
+      - '37'
+      - '43'
+      - '48'
+      - '19'
+      - '75'
+      - '23'
+      - '28'
+      - '34'
+      - '65'
+      - '49'
+      - '47'
+      - '26'
+      valid:
+      - '25'
+      - '06'
+      - '55'
+      - '21'
+      - '29'
+      - '36'
+      - '52'
+      - '64'
+      - '32'
+      - '33'
+      - '02'
+      - '08'
+      test:
+      - '14'
+      - '73'
+      - '27'
+      - '24'
+      - '63'
+      - '05'
+      - '41'
+      - '51'
+      - '17'
+      - '04'
+      - '12'
+      - '80'
+    cv_5_fold:
+      fold_1:
+        train:
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        test_validation:
+        - '11'
+        - '46'
+      fold_2:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        test_validation:
+        - '33'
+        - '29'
+      fold_3:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '07'
+        - '42'
+        - '76'
+        - '02'
+        test:
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        test_validation:
+        - '40'
+        - '81'
+      fold_4:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '76'
+        - '02'
+        test:
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        test_validation:
+        - '07'
+        - '42'
+      fold_5:
+        train:
+        - '45'
+        - '37'
+        - '60'
+        - '24'
+        - '67'
+        - '31'
+        - '17'
+        - '23'
+        - '48'
+        - '10'
+        - '51'
+        - '43'
+        - '35'
+        - '57'
+        - '28'
+        - '20'
+        - '06'
+        - '13'
+        - '41'
+        - '34'
+        - '54'
+        - '03'
+        - '09'
+        - '74'
+        - '50'
+        - '64'
+        - '05'
+        - '27'
+        - '65'
+        - '30'
+        - '36'
+        - '72'
+        - '47'
+        - '53'
+        - '55'
+        - '26'
+        - '21'
+        - '59'
+        - '00'
+        - '44'
+        - '75'
+        - '73'
+        - '18'
+        - '16'
+        - '80'
+        - '66'
+        - '04'
+        - '25'
+        - '82'
+        - '38'
+        - '19'
+        - '63'
+        - '58'
+        - '71'
+        - '61'
+        valid:
+        - '11'
+        - '46'
+        - '33'
+        - '29'
+        - '40'
+        - '81'
+        - '07'
+        - '42'
+        test:
+        - '52'
+        - '62'
+        - '15'
+        - '12'
+        - '56'
+        - '22'
+        - '32'
+        - '49'
+        - '08'
+        - '70'
+        - '01'
+        - '14'
+        - '77'
+        test_validation:
+        - '76'
+        - '02'
+  sampling_rate: 100
+  epoch_duration: 30
+  stages:
+    0: Wake
+    1: N1
+    2: N2
+    3: N3
+    4: REM
+  norm_length: epoch
+  norm_type: defossez
+  pretraining:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 64
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 100000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 0
+    valid_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 1
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.freq_data_loader.DatasetForRandomFrequencies
+        n_samples: 1000
+        n_freq: ${data.pretraining.n_freqs}
+        freq_min: ${data.pretraining.freq_min}
+        freq_max: ${data.pretraining.freq_max}
+        do_phase_shifts: ${data.pretraining.do_phase_shifts}
+        normalize: true
+        seed: 2
+    n_freqs: 20
+    freq_min: 0.3
+    freq_max: 35
+    do_phase_shifts: true
+  downstream:
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 32
+      shuffle: true
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.train}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.SubjectWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: true
+          left_epochs: ${....left_epochs}
+          n_subjects: -1
+          seed: ${seeds[0]}
+        seed: ${seeds[0]}
+    valid_dataloader: null
+    test_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.test}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    earlystopping_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 512
+      shuffle: false
+      num_workers: 4
+      multiprocessing_context: fork
+      dataset:
+        _target_: base.data.data_loaders.DatasetForRecords
+        left_epochs: ${...left_epochs}
+        right_epochs: ${...right_epochs}
+        subject_ids: ${data.sleepedfx.subject_ids.valid}
+        meta_obj:
+          _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+          data_path: ${data.sleepedfx.path}
+        norm_length: ${data.norm_length}
+        norm_type: ${data.norm_type}
+        channels: ${data.sleepedfx.channels}
+        data_reducer:
+          _target_: base.data.data_reducer.ClassWiseDataReducer
+          data_fraction: 1.0
+          repeat_samples: false
+          left_epochs: ${....left_epochs}
+    left_epochs: 5
+    right_epochs: 5
+  clamp_value: 20
+general:
+  device: cuda
+  gpus:
+  - 0
+  - 1
+  - 2
+  - 3
+  snapshot_dir: ./models
+  results_dir: null
+model:
+  pretraining:
+    _target_: base.model.pretraining.freq_simple.SimpleFreqModel
+    encoder:
+      _target_: base.model.fe_tinysleepnet.FeTinySleepNet
+      filters: 128
+      dropout:
+      - 0.5
+      - 0.5
+      seed: ${seeds[1]}
+    encoding_size: 512
+    n_outputs: ${data.pretraining.n_freqs}
+    is_pretraining: true
+    seed: ${seeds[1]}
+  downstream:
+    _target_: base.model.base_fe_clas.BaseFeClasModel
+    finetune_feature_extractor: false
+    feature_extractor:
+      _target_: ${model.pretraining._target_}
+      encoder: ${model.pretraining.encoder}
+      encoding_size: ${model.pretraining.encoding_size}
+      n_outputs: ${model.pretraining.n_outputs}
+      is_pretraining: false
+      path: null
+      seed: ${seeds[2]}
+    classifier:
+      _target_: base.model.clas_tinysleepnet.ClasTinySleepNet
+      feature_size: 512
+      dropout: 0.5
+      hidden_size: 128
+      bidirectional: true
+      seed: ${seeds[2]}
+    path: ${m_seed_path_sids.path}
+training:
+  pretraining:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      lr: 0.0001
+    trainer:
+      _target_: base.training.freq_trainer.FreqTrainer
+      epochs: 20
+      model: ${model.pretraining}
+      dataloader: ${data.pretraining.train_dataloader}
+      log_interval: 10
+      clip_gradients: false
+      add_epoch_in_save: false
+      evaluators:
+        valid_pretraining: ${evaluators.pretraining.valid_pretraining}
+      seed: ${seeds[3]}
+  downstream:
+    lr_scheduler:
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      weight_decay: 0.001
+    trainer:
+      _target_: base.training.clas_trainer.ClasTrainer
+      epochs: 50
+      clip_gradients: 5.0
+      lr: 0.0001
+      early_stopping_epochs: 10
+      dataloader: ${data.downstream.train_dataloader}
+      model: ${model.downstream}
+      log_interval: 10
+      evaluators:
+        earlystopping: ${evaluators.downstream.earlystopping}
+        test: ${evaluators.downstream.test}
+      seed: ${seeds[4]}
+m_seed_path_sids:
+  seeds:
+  - null
+  - null
+  - null
+  - null
+  - null
+  path: same_run
+  subject_ids:
+    sleepedfx: ${data.sleepedfx.hold_out}
+seeds: ${m_seed_path_sids.seeds}
+evaluators:
+  pretraining:
+    valid_pretraining:
+      _target_: base.evaluation.freq_evaluator.FreqEvaluator
+      dataset: valid_pretraining
+      dataloader: ${data.pretraining.valid_dataloader}
+  downstream:
+    train:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: train
+      dataloader: ${data.downstream.train_dataloader}
+    earlystopping:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: earlystopping
+      dataloader: ${data.downstream.earlystopping_dataloader}
+    test:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: test
+      dataloader: ${data.downstream.test_dataloader}
+      log_subjects: true

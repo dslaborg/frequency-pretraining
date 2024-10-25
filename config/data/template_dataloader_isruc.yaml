@@ -1,0 +1,35 @@
+# template config for a dataloader for the isruc dataset
+
+# configuration of standard torch Dataloader
+_target_: torch.utils.data.DataLoader
+batch_size: 32
+shuffle: False
+num_workers: 4
+multiprocessing_context: fork  # necessary for joblib launcher if using multiple GPUs
+
+# configuration of the custom dataset
+dataset:
+  _target_: base.data.data_loaders.DatasetForSequences
+
+  # load these from the experiment config since they depend on whether the dataset is used for pretraining or
+  # fine-tuning
+  left_epochs: ${...left_epochs}
+  right_epochs: ${...right_epochs}
+
+  # needs to be set individually for each dataset
+  subject_ids: ???
+
+  # how and where to load the data from
+  meta_obj:
+    _target_: base.data.meta_isruc.MetaIsruc
+    data_path: ${data.isruc.path}
+
+  # channels to load
+  channels: ${data.isruc.channels}
+
+  # normally, we use the full training data
+  data_reducer:
+    _target_: base.data.data_reducer.ClassWiseDataReducer
+    data_fraction: 1.0
+    repeat_samples: False
+    left_epochs: ${....left_epochs}

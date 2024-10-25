@@ -1,0 +1,16 @@
+# @package _global_
+# config for an experiment with a random fixed FE and fine-tuning of the classifier only; no pretraining
+
+defaults:
+  - fpt_config@_global_
+  - ../sweeper/basic_sweep_config@_global_
+  - ../launcher/joblib_config@_global_
+  - _self_
+
+model:
+  downstream:
+    # the FE remains fixed
+    finetune_feature_extractor: False
+    # no pretraining, so the path to the pretrained FE is null --> the FE is randomly initialized
+    feature_extractor:
+      path: null

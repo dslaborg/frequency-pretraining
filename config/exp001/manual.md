@@ -1,6 +1,6 @@
 # exp001
 
-This file describes how to reproduce the results presented in Figure 2 in our paper.
+This file describes how to reproduce the results presented in Figure 2 and 3 in our paper.
 These results stem from four different training setups, which are grouped together in the experiment `exp001` as
 sub-experiments `exp001a`, `exp001b`, `exp001c`, and `exp001d`.
 
@@ -68,12 +68,12 @@ done
 m_seed_path_sids="${m_seed_path_sids::-1}"
 # m_seed_path_sids should look like this: {seeds:[0,0,0,0,0],path:"exp001b-m0-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_1}}},{seeds:[1,1,1,1,1],path:"exp001b-m1-simple_multi_class-2023-10-12_18-34-48-final.pth",subject_ids:{dod_o_h:${data.dod_o_h.cv_5_fold.fold_2}}},...
 
-# start the fine-tuning phase as multiruns with 3 * 5 * 6 = 90 runs (number of repetitions * number of folds * number of data reductions to explore)
+# start the fine-tuning phase as multiruns with 3 * 5 = 15 runs (number of repetitions * number of folds)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
-python scripts/fine-tune.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
-python scripts/fine-tune.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
-python scripts/fine-tune.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
-python scripts/fine-tune.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids" data.downstream.train_dataloader.dataset.data_reducer.n_subjects=56,25,10,5,2,1 general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001a -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001b -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001c -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
+python scripts/fine-tune.py -cn=exp001/exp001d -m m_seed_path_sids="$m_seed_path_sids" general.gpus=[0] hydra.launcher.n_jobs=10
 ```
 
 ## evaluation on test set
@@ -105,22 +105,18 @@ base_model_path='#exp#-m#run_index#-base_fe_clas-#run_name#-final.pth'
 n_runs=3
 # number of folds in the cross-validation scheme
 n_folds=5
-# number of data reductions that were explored during the fine-tuning phase
-n_data_reductions=6
 m_seed_path_sids=''
 i_run=0
 for i in $(seq 0 $((n_runs-1))); do
   for j in $(seq 1 $((n_folds))); do
-    for k in $(seq 1 $((n_data_reductions))); do
-      # replace the run_index placeholder with the actual index of the fine-tuning run
-      model_path=${base_model_path//#run_index#/$((i_run))}
-      # specify the fold of the cross-validation scheme
-      subject_ids="\${data.dod_o_h.cv_5_fold.fold_${j}}"
-      # create a dict that will be used to overwrite the m_seed_path_sids parameter in the config
-      m_seed_path_sids+="{path:\"$model_path\",subject_ids:{dod_o_h:${subject_ids}}},"
-      # increment the run_index for each repetition, fold, and data reduction
-      i_run=$((i_run+1))
-    done
+    # replace the run_index placeholder with the actual index of the fine-tuning run
+    model_path=${base_model_path//#run_index#/$((i_run))}
+    # specify the fold of the cross-validation scheme
+    subject_ids="\${data.dod_o_h.cv_5_fold.fold_${j}}"
+    # create a dict that will be used to overwrite the m_seed_path_sids parameter in the config
+    m_seed_path_sids+="{path:\"$model_path\",subject_ids:{dod_o_h:${subject_ids}}},"
+    # increment the run_index for each repetition, fold, and data reduction
+    i_run=$((i_run+1))
   done
 done
 m_seed_path_sids="${m_seed_path_sids::-1}"
@@ -136,7 +132,7 @@ m_seed_path_sids_001c=${m_seed_path_sids_001c//#run_name#/$exp001c_run}
 m_seed_path_sids_001d=${m_seed_path_sids//#exp#/exp001d}
 m_seed_path_sids_001d=${m_seed_path_sids_001d//#run_name#/$exp001d_run}
 
-# start the evaluation on the test set as multiruns with 3 * 5 * 6 = 90 runs (number of repetitions * number of folds * number of data reductions)
+# start the evaluation on the test set as multiruns with 3 * 5 = 15 runs (number of repetitions * number of folds)
 # the number of gpus and the number of parallel jobs can be adjusted to the available resources
 # the model.downstream.path parameter is added to point towards the model path defined in m_seed_path_sids
 # since we always load the full model, the model.downstream.feature_extractor.path parameter is set to null

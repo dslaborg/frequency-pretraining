@@ -1,0 +1,79 @@
+# base configuration for various settings around the Sleep-EDFx dataset
+data:
+  sleepedfx:
+    # path to the dataset (folder with npz files)
+    path: './cache/sleep-edfx/'
+    # channels to train on
+    channels: [ 'EEG Fpz-Cz', 'EEG Pz-Oz', 'EOG horizontal' ]
+
+    # which subject ids to use for training, validation and testing
+    subject_ids: ${.hold_out}
+
+    # split for a classic hold out validation
+    # 54 train, 12 valid, 12 test
+    hold_out:
+      train: [ '62', '15', '42', '30', '56', '82', '74', '66', '53', '22', '07', '67', '50', '44', '72', '58', '18',
+               '11', '03', '38', '60', '31', '09', '01', '57', '35', '59', '61', '77', '45', '54', '46', '00', '76',
+               '71', '16', '20', '81', '40', '10', '70', '13', '37', '43', '48', '19', '75', '23', '28', '34', '65',
+               '49', '47', '26' ]
+      valid: [ '25', '06', '55', '21', '29', '36', '52', '64', '32', '33', '02', '08' ]
+      test: [ '14', '73', '27', '24', '63', '05', '41', '51', '17', '04', '12', '80' ]
+
+    # split for a 5 fold cross validation
+    # each fold is further split into a train, valid and test set
+    # one fold contains 78 / 5 = 15 or 16 subjects
+    # --> train + valid = 60-64 subjects
+    #   --> train = 52-56 subjects (these are the test subjects for the other folds)
+    #   --> valid = 8 subjects (these are the test_validation subjects for the other folds)
+    # --> test = 15-16 subjects
+    #   --> test = 13-14 subjects (used for calculating the final test score of the fold)
+    #   --> test_validation = 2 subjects (not used in any way in this fold)
+    #
+    # reasoning test_validation set:
+    # - this is the part of the data that is used for validating the models in the other splits (e.g. the
+    # test_validation set of fold 1 is used for validating the models in folds 2-5)
+    # - therefore, this part of the data influenced the hyperparameter tuning and early stopping of the models in the
+    # other folds
+    # - therefore, we can't use this part of the data for testing our models in fold 1, otherwise we would have a
+    # biased estimate of the generalization performance of our models
+    cv_5_fold:
+      fold_1:
+        train: [ '28', '20', '06', '13', '41', '34', '54', '03', '09', '74', '50', '64', '05', '27',
+                 '65', '30', '36', '72', '47', '53', '55', '26', '21', '59', '00', '44', '75', '73',
+                 '18', '16', '80', '66', '04', '25', '82', '38', '19', '63', '58', '71', '61',
+                 '52', '62', '15', '12', '56', '22', '32', '49', '08', '70', '01', '14', '77' ]
+        valid: [ '33', '29', '40', '81', '07', '42', '76', '02' ]
+        test: [ '45', '37', '60', '24', '67', '31', '17', '23', '48', '10', '51', '43', '35', '57' ]
+        test_validation: [ '11', '46' ]
+      fold_2:
+        train: [ '45', '37', '60', '24', '67', '31', '17', '23', '48', '10', '51', '43', '35', '57',
+                 '65', '30', '36', '72', '47', '53', '55', '26', '21', '59', '00', '44', '75', '73',
+                 '18', '16', '80', '66', '04', '25', '82', '38', '19', '63', '58', '71', '61',
+                 '52', '62', '15', '12', '56', '22', '32', '49', '08', '70', '01', '14', '77' ]
+        valid: [ '11', '46', '40', '81', '07', '42', '76', '02' ]
+        test: [ '28', '20', '06', '13', '41', '34', '54', '03', '09', '74', '50', '64', '05', '27' ]
+        test_validation: [ '33', '29' ]
+      fold_3:
+        train: [ '45', '37', '60', '24', '67', '31', '17', '23', '48', '10', '51', '43', '35', '57',
+                 '28', '20', '06', '13', '41', '34', '54', '03', '09', '74', '50', '64', '05', '27',
+                 '18', '16', '80', '66', '04', '25', '82', '38', '19', '63', '58', '71', '61',
+                 '52', '62', '15', '12', '56', '22', '32', '49', '08', '70', '01', '14', '77' ]
+        valid: [ '11', '46', '33', '29', '07', '42', '76', '02' ]
+        test: [ '65', '30', '36', '72', '47', '53', '55', '26', '21', '59', '00', '44', '75', '73' ]
+        test_validation: [ '40', '81' ]
+      fold_4:
+        train: [ '45', '37', '60', '24', '67', '31', '17', '23', '48', '10', '51', '43', '35', '57',
+                 '28', '20', '06', '13', '41', '34', '54', '03', '09', '74', '50', '64', '05', '27',
+                 '65', '30', '36', '72', '47', '53', '55', '26', '21', '59', '00', '44', '75', '73',
+                 '52', '62', '15', '12', '56', '22', '32', '49', '08', '70', '01', '14', '77' ]
+        valid: [ '11', '46', '33', '29', '40', '81', '76', '02' ]
+        test: [ '18', '16', '80', '66', '04', '25', '82', '38', '19', '63', '58', '71', '61' ]
+        test_validation: [ '07', '42' ]
+      fold_5:
+        train: [ '45', '37', '60', '24', '67', '31', '17', '23', '48', '10', '51', '43', '35', '57',
+                 '28', '20', '06', '13', '41', '34', '54', '03', '09', '74', '50', '64', '05', '27',
+                 '65', '30', '36', '72', '47', '53', '55', '26', '21', '59', '00', '44', '75', '73',
+                 '18', '16', '80', '66', '04', '25', '82', '38', '19', '63', '58', '71', '61' ]
+        valid: [ '11', '46', '33', '29', '40', '81', '07', '42' ]
+        test: [ '52', '62', '15', '12', '56', '22', '32', '49', '08', '70', '01', '14', '77' ]
+        test_validation: [ '76', '02' ]

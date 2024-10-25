@@ -3,12 +3,12 @@
 # import dataloaders from templates so this config is not as cluttered
 defaults:
   - ../base_config@_global_
-  - ../data/base_dreem@_global_
+  - ../data/base_sleepedfx@_global_
   - ../data/template_dataloader_fpt@data.pretraining.train_dataloader
   - ../data/template_dataloader_fpt@data.pretraining.valid_dataloader
-  - ../data/template_dataloader_dreem@data.downstream.train_dataloader
-  - ../data/template_dataloader_dreem@data.downstream.earlystopping_dataloader
-  - ../data/template_dataloader_dreem@data.downstream.test_dataloader
+  - ../data/template_dataloader_sleepedfx@data.downstream.train_dataloader
+  - ../data/template_dataloader_sleepedfx@data.downstream.earlystopping_dataloader
+  - ../data/template_dataloader_sleepedfx@data.downstream.test_dataloader
   - _self_
 
 # dummy variable to connect various variables that depend on each other
@@ -20,7 +20,7 @@ m_seed_path_sids:
   path: 'same_run'  # model.downstream.feature_extractor.path
   # subject ids for the different splits, this needs to be changed for cross validation runs
   subject_ids:
-    dod_o_h: ${data.dod_o_h.hold_out}  # data.dod_o_h.subject_ids
+    sleepedfx: ${data.sleepedfx.hold_out}  # data.sleepedfx.subject_ids
 
 seeds: ${m_seed_path_sids.seeds}
 
@@ -29,9 +29,10 @@ data:
   # clamp value for the iqr scaling used to scale the sleep data
   clamp_value: 20
 
-  dod_o_h:
+  sleepedfx:
     # subject ids for the different splits
-    subject_ids: ${m_seed_path_sids.subject_ids.dod_o_h}  # dict with subject ids
+    subject_ids: ${m_seed_path_sids.subject_ids.sleepedfx}  # dict with subject ids
+
   pretraining:
     # various parameters for the pretraining data (see freq_data_loader.py for more details)
     n_freqs: 20
@@ -63,24 +64,17 @@ data:
       shuffle: True
       dataset:
         # subject ids to train on
-        subject_ids: ${data.dod_o_h.subject_ids.train}
-        # configuration that allows the reduction of the amount of training data (see data_reducer.py for more details)
-        data_reducer:
-          _target_: base.data.data_reducer.SubjectWiseFixedEpochsDataReducer
-          n_subjects: -1
-          n_epochs: -1
-          repeat_samples: true
-          seed: ${seeds[0]}
+        subject_ids: ${data.sleepedfx.subject_ids.train}
     earlystopping_dataloader:
       batch_size: 512
       dataset:
         # subject ids to validate on
-        subject_ids: ${data.dod_o_h.subject_ids.valid}
+        subject_ids: ${data.sleepedfx.subject_ids.valid}
     test_dataloader:
       batch_size: 512
       dataset:
         # subject ids to test on
-        subject_ids: ${data.dod_o_h.subject_ids.test}
+        subject_ids: ${data.sleepedfx.subject_ids.test}
 
 # configurations regarding the model
 model:

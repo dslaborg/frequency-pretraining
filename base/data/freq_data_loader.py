@@ -9,6 +9,7 @@ class DatasetForRandomFrequencies(Dataset):
     def __init__(
         self,
         n_samples: int = 1000,
+        n_samples_per_epoch: int = None,
         n_freq: int = 20,
         freq_min: float = 0.3,
         freq_max: float = 35,
@@ -36,6 +37,8 @@ class DatasetForRandomFrequencies(Dataset):
           6. Normalize the time series if normalize is True.
 
         :param n_samples: number of samples to generate
+        :param n_samples_per_epoch: number of samples per epoch, if None, n_samples is used; can be used to under-
+        or over-sample the data
         :param n_freq: number of frequency bins
         :param freq_min: minimum frequency
         :param freq_max: maximum frequency
@@ -48,6 +51,7 @@ class DatasetForRandomFrequencies(Dataset):
         """
         super(DatasetForRandomFrequencies, self).__init__()
         self.n_samples = n_samples
+        self.n_samples_per_epoch = n_samples_per_epoch
         self.n_freqs = n_freq
         self.freq_min = freq_min
         self.freq_max = freq_max
@@ -110,6 +114,9 @@ class DatasetForRandomFrequencies(Dataset):
         :return: tuple of the form (x, y) where x is a tensor of shape (n_channels, datapoints) and y is a tensor of
         shape (n_freqs).
         """
+        # make sure the index is within the range of the number of samples, this is important if
+        # self.n_samples_per_epoch is higher than self.n_samples
+        index = index % self.n_samples
         t = np.linspace(0, 1, self.sr * self.seconds)
         x = np.array(
             [
@@ -135,4 +142,8 @@ class DatasetForRandomFrequencies(Dataset):
         return np.array(x, dtype="float32"), y
 
     def __len__(self):
-        return self.n_samples
+        return (
+            self.n_samples_per_epoch
+            if self.n_samples_per_epoch is not None
+            else self.n_samples
+        )

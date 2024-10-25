@@ -787,13 +787,13 @@ training:
     trainer:
       _target_: base.training.freq_trainer.FreqTrainer
       epochs: 20
-      model: ${model.ssl}
+      model: ${model.pretraining}
       dataloader: ${data.pretraining.train_dataloader}
       log_interval: 10
       clip_gradients: false
       add_epoch_in_save: false
       evaluators:
-        train_pretraining: ${evaluators.pretraining.train_pretraining}
+        pretrain: ${evaluators.pretraining.pretrain}
         valid_pretraining: ${evaluators.pretraining.valid_pretraining}
       seed: ${seeds[3]}
   downstream:
@@ -839,9 +839,9 @@ seeds:
 - 0
 evaluators:
   pretraining:
-    train_pretraining:
+    pretrain:
       _target_: base.evaluation.freq_evaluator.FreqEvaluator
-      dataset: train_pretraining
+      dataset: pretrain
       dataloader: ${data.pretraining.train_dataloader}
     valid_pretraining:
       _target_: base.evaluation.freq_evaluator.FreqEvaluator

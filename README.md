@@ -7,7 +7,7 @@ Implementation of Frequency Pretraining (FPT) as described in:
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series
 > Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
 
-Part of our work will be presented at the ICLR 2024 Workshop on Learning from Time Series for Health:
+Part of our work was presented at the ICLR 2024 Workshop on Learning from Time Series for Health:
 
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In
 *ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024.
@@ -28,7 +28,7 @@ The project is set up as follows:
         * `fpt_config.yaml`: base configuration for the `exp001` experiment group
         * `manual.md`: manual for the `exp001` experiment group, which describes how to run the experiments and evaluate
           the models; the manual is used to reproduce the results of the paper
-    * `exp002/` and `exp003/`: similar to `exp001`, but for a different set of experiments
+    * `exp002/`, ...: similar to `exp001`, but for a different set of experiments
     * `launcher/`: base config around the launcher that is used by hydra to launch runs
     * `sweeper/`: base config around the sweeper that is used by hydra to sweep over parameter ranges in multiruns
     * `base_config.yaml`: base configuration for all experiments; describes the rough outline of experiment
@@ -83,40 +83,51 @@ To reproduce the results described in the paper, you need to (i) download the da
 pretrain/fine-tune the models according to exp001a-exp001d, and (iv) evaluate the models:
 
 1. Download the data:
-    1. Download the EEG signals using the [download_data.py](preprocessing%2Fdreem%2Fdownload_data.py) script.
-    2. Download the annotations from
-       the [dreem-learning-evaluation](https://github.com/Dreem-Organization/dreem-learning-evaluation) repository.
+    - DODO/H datasets:
+        1. Download the EEG signals using the [download_data.py](preprocessing/dreem/download_data.py) script.
+        2. Download the annotations from
+           the [dreem-learning-evaluation](https://github.com/Dreem-Organization/dreem-learning-evaluation) repository.
+    - Sleep-EDFx dataset:
+        1. Download the data from the [PhysioNet](https://physionet.org/content/sleep-edfx/1.0.0/) website.
+    - ISRUC dataset:
+        1. Download the data from [their website](https://sleeptight.isr.uc.pt/).
 2. Preprocessing of the data:
-    1. Preprocess the data using the [prepare_dodh.py](preprocessing%2Fdreem%2Fprepare_dodh.py)
-       and [prepare_dodo.py](preprocessing%2Fdreem%2Fprepare_dodo.py) scripts (see below for details on the parameters
-       of
-       the scripts).
-    2. Copy all preprocessed datafiles to the `cache/dod_o_h` directory.
+    - DODO/H datasets:
+        1. Preprocess the data using the [prepare_dodh.py](preprocessing/dreem/prepare_dodh.py)
+           and [prepare_dodo.py](preprocessing/dreem/prepare_dodo.py) scripts (see below for details on the parameters
+           of the scripts).
+        2. Copy all preprocessed datafiles to the `cache/dod_o_h` directory.
+    - Sleep-EDFx dataset:
+        1. Preprocess the data using the [prepare_sleepedfx.py](preprocessing/sleepedfx/prepare_sleepedfx.py)
+           script (see below for details on the parameters of the script).
+    - ISRUC dataset:
+        1. Preprocess the data using the [prepare_isruc.py](preprocessing/isruc/prepare_isruc.py) script (see below
+           for details on the parameters of the script).
 3. Follow the instructions given in the manual files of the experiments to pretrain and fine-tune the models.
-    1. `exp001` contains the configuration to reproduce Figure 2 and Figure 4 of the paper. The manual can be found
-       at [config/exp001/manual.md](config/exp001/manual.md).
-    2. `exp002` contains the configuration to reproduce Figure 3 of the paper. The manual can be found
-       at [config/exp002/manual.md](config/exp002/manual.md).
-    3. `exp003` contains the configuration to reproduce the results of a hyperparameter exploration investigating
-       various pretraining parameters (only mentioned
-       shortly in the paper). The manual can be found at [config/exp003/manual.md](config/exp003/manual.md).
+    1. For Figure 2, you need the results of exp001-exp006. The manual for exp001 can be found at
+       [config/exp001/manual.md](config/exp001/manual.md). The manuals of other experiments follow the same structure.
+    2. For Figure 3, you need the results of exp004-exp006. The manual for exp004 can be found at
+       [config/exp004/manual.md](config/exp004/manual.md). The manuals of other experiments follow the same structure.
+    3. For Figure 4, you need the results of exp001 and exp007. The manual for exp007 can be found at
+       [config/exp007/manual.md](config/exp007/manual.md).
 4. Evaluation on the test set is also described in the manual files.
 
 ## Scripts
 
 ### Preprocessing scripts
 
-The `preprocessing` directory contains scripts used to preprocess the data (in our case, the `dreem` data sets).
+The `preprocessing` directory contains scripts used to preprocess the data (in our case, the `dreem` (DODO/H),
+`sleepedfx`, and `isruc` datasets).
 
-#### download_data.py
+#### dreem/download_data.py
 
-Downloads the EEG signals from the Dreem data set to `~/data/dreem`.
+Downloads the EEG signals from the Dreem dataset to `~/data/dreem`.
 
 Sample call: `python preprocessing/dreem/download_data.py`
 
-#### prepare_dodh.py
+#### dreem/prepare_dodh.py
 
-Preprocessing script for the DODH data set.
+Preprocessing script for the DODH dataset.
 
 Arguments:
 
@@ -126,9 +137,9 @@ Arguments:
 
 Sample call: `python preprocessing/dreem/prepare_dodh.py -s ~/data/dreem -a ~/data/dreem -o cache/dodh`
 
-#### prepare_dodo.py
+#### dreem/prepare_dodo.py
 
-Preprocessing script for the DODO data set.
+Preprocessing script for the DODO dataset.
 
 Arguments:
 
@@ -137,6 +148,32 @@ Arguments:
 * `-o` or `--output_dir`: path to the directory where the preprocessed data should be saved; default is `cache/dodo`
 
 Sample call: `python preprocessing/dreem/prepare_dodo.py -s ~/data/dreem -a ~/data/dreem -o cache/dodo`
+
+#### sleepedfx/prepare_sleepedfx.py
+
+Preprocessing script for the Sleep-EDFx dataset.
+
+Arguments:
+
+* `-d` or `--data_dir`: path to the directory containing the EEG signals (*PSG.edf) and the corresponding annotations
+  (*Hypnogram.edf)
+* `-o` or `--output_dir`: path to the directory where the preprocessed data should be saved; default is
+  `cache/sleep-edfx`
+
+Sample call:
+`python preprocessing/sleepedfx/prepare_sleepedfx.py -d ~/data/sleepedfx -o cache/sleep-edfx`
+
+#### isruc/prepare_isruc.py
+
+Preprocessing script for the ISRUC dataset.
+
+Arguments:
+
+* `-s` or `--signals_dir`: path to the directory containing the folder structure from the ISRUC website with the EEG
+  signals (.rec) and the corresponding annotations (.txt)
+* `-o` or `--output_dir`: path to the directory where the preprocessed data should be saved; default is `cache/isruc`
+
+Sample call: `python preprocessing/isruc/prepare_isruc.py -s ~/data/isruc -o cache/isruc`
 
 ### Running and evaluating an experiment
 
@@ -207,7 +244,8 @@ Arguments:
   exist in the `config/<experiment group>` directory
 
 Sample call (single
-run): `python scripts/eval_fine-tuned.py -cn=exp001/exp001a +model.downstream.path='exp001b-base_fe_clas-2023-10-13_14-21-17-final.pth' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null`
+run):
+`python scripts/eval_fine-tuned.py -cn=exp001/exp001a +model.downstream.path='exp001b-base_fe_clas-2023-10-13_14-21-17-final.pth' +training.downstream.trainer.evaluators.test='${evaluators.downstream.test}' model.downstream.feature_extractor.path=null`
 
 Explanation of the sample call: The `+model.downstream.path` parameter specifies the path to the model checkpoint that
 should
@@ -223,29 +261,23 @@ is not needed for evaluation because we always load the full model.
 
 The `scripts/visualization` directory contains scripts used to create the figures used in our paper.
 
-#### sample_prob_plots.py
-
-Creates sample bar charts that were used in Figure 1 of the paper.
-
-Sample call: `python scripts/visualization/sample_prob_plots.py`
-
 #### visualize_matrix_nepochs_vs_nsubjects_testdata_cv.py
 
-Creates the plot used in Figure 3 of the paper by reading the results of experiment group exp002 from the `logs`
+Creates the plot used in Figure 3 of the paper by reading the results of experiment groups exp004-exp006 from the `logs`
 directory.
 
 Sample call: `python scripts/visualization/visualize_matrix_nepochs_vs_nsubjects_testdata_cv.py`
 
 #### visualize_metrics_pretraining.py
 
-Creates the plot used in Figure 4 of the paper by reading the results of experiment group exp001 from the `logs`
-directory.
+Creates the plot used in Figure 4 of the paper by reading the results of experiment groups exp001 and exp007 from the
+`logs` directory.
 
 Sample call: `python scripts/visualization/visualize_metrics_pretraining.py`
 
-#### visualize_nsubjects_vs_mf1_testdata_cv.py
+#### visualize_datasets_mf1_testdata_cv.py
 
-Creates the plot used in Figure 2 of the paper by reading the results of experiment group exp001 from the `logs`
+Creates the plot used in Figure 2 of the paper by reading the results of experiment groups exp001-exp006 from the `logs`
 directory.
 
 Sample call: `python scripts/visualization/visualize_nsubjects_vs_mf1_testdata_cv.py`

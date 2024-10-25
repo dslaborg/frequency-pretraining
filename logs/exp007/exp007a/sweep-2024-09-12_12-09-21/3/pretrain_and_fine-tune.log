@@ -1,0 +1,609 @@
+[2024-09-12 12:09:29,739][INFO][pretrain_and_fine-tune:26] - Using GPU 4
+[2024-09-12 12:09:29,742][INFO][pretrain_and_fine-tune:36] - overrides:
+hydra:
+- hydra.launcher.n_jobs=20
+- hydra.mode=MULTIRUN
+task:
+- m_seed_path_sids={seeds:[1,1,1,1,1],subject_ids:{dod_o_h:$\{data.dod_o_h.cv_5_fold.fold_2\}}}
+- data.pretraining.train_dataloader.dataset.n_samples=1
+- +data.pretraining.train_dataloader.dataset.n_samples_per_epoch=100000
+- data.downstream.train_dataloader.dataset.data_reducer._target_=base.data.data_reducer.SubjectWiseDataReducer
+- +data.downstream.train_dataloader.dataset.data_reducer.n_subjects=1
+- general.gpus=[1,4]
+
+[2024-09-12 12:09:37,513][INFO][freq_trainer:43] - metrics before training (epoch 0):
+[2024-09-12 12:09:41,656][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.485
+[2024-09-12 12:09:48,098][INFO][freq_trainer:114] - train epoch: 1 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.085422
+[2024-09-12 12:09:53,914][INFO][freq_trainer:114] - train epoch: 1 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.012012
+[2024-09-12 12:09:59,622][INFO][freq_trainer:114] - train epoch: 1 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.002313
+[2024-09-12 12:10:05,284][INFO][freq_trainer:114] - train epoch: 1 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000702
+[2024-09-12 12:10:11,068][INFO][freq_trainer:114] - train epoch: 1 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.001639
+[2024-09-12 12:10:16,663][INFO][freq_trainer:114] - train epoch: 1 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000359
+[2024-09-12 12:10:22,345][INFO][freq_trainer:114] - train epoch: 1 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.001092
+[2024-09-12 12:10:28,321][INFO][freq_trainer:114] - train epoch: 1 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000536
+[2024-09-12 12:10:34,263][INFO][freq_trainer:114] - train epoch: 1 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.001916
+[2024-09-12 12:10:40,001][INFO][freq_trainer:114] - train epoch: 1 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000384
+[2024-09-12 12:10:41,740][INFO][freq_trainer:57] - [epoch   1] execution time: 60.08s	metrics:
+[2024-09-12 12:10:41,741][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:10:41,748][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:10:47,539][INFO][freq_trainer:114] - train epoch: 2 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000958
+[2024-09-12 12:10:53,050][INFO][freq_trainer:114] - train epoch: 2 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000016
+[2024-09-12 12:10:58,695][INFO][freq_trainer:114] - train epoch: 2 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000091
+[2024-09-12 12:11:04,175][INFO][freq_trainer:114] - train epoch: 2 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000005
+[2024-09-12 12:11:09,623][INFO][freq_trainer:114] - train epoch: 2 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000099
+[2024-09-12 12:11:15,074][INFO][freq_trainer:114] - train epoch: 2 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000082
+[2024-09-12 12:11:20,613][INFO][freq_trainer:114] - train epoch: 2 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000047
+[2024-09-12 12:11:26,081][INFO][freq_trainer:114] - train epoch: 2 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000017
+[2024-09-12 12:11:31,674][INFO][freq_trainer:114] - train epoch: 2 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000007
+[2024-09-12 12:11:37,204][INFO][freq_trainer:114] - train epoch: 2 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000007
+[2024-09-12 12:11:38,970][INFO][freq_trainer:57] - [epoch   2] execution time: 57.22s	metrics:
+[2024-09-12 12:11:38,970][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:11:38,978][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:11:44,820][INFO][freq_trainer:114] - train epoch: 3 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000004
+[2024-09-12 12:11:50,389][INFO][freq_trainer:114] - train epoch: 3 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000004
+[2024-09-12 12:11:55,897][INFO][freq_trainer:114] - train epoch: 3 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000046
+[2024-09-12 12:12:01,359][INFO][freq_trainer:114] - train epoch: 3 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000135
+[2024-09-12 12:12:06,977][INFO][freq_trainer:114] - train epoch: 3 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000042
+[2024-09-12 12:12:12,381][INFO][freq_trainer:114] - train epoch: 3 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000011
+[2024-09-12 12:12:17,807][INFO][freq_trainer:114] - train epoch: 3 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000018
+[2024-09-12 12:12:23,205][INFO][freq_trainer:114] - train epoch: 3 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000003
+[2024-09-12 12:12:28,671][INFO][freq_trainer:114] - train epoch: 3 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000006
+[2024-09-12 12:12:34,119][INFO][freq_trainer:114] - train epoch: 3 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:12:35,996][INFO][freq_trainer:57] - [epoch   3] execution time: 57.02s	metrics:
+[2024-09-12 12:12:35,997][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:12:36,004][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:12:41,719][INFO][freq_trainer:114] - train epoch: 4 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000054
+[2024-09-12 12:12:47,229][INFO][freq_trainer:114] - train epoch: 4 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:12:52,754][INFO][freq_trainer:114] - train epoch: 4 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000005
+[2024-09-12 12:12:58,268][INFO][freq_trainer:114] - train epoch: 4 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:13:03,784][INFO][freq_trainer:114] - train epoch: 4 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:13:09,362][INFO][freq_trainer:114] - train epoch: 4 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000023
+[2024-09-12 12:13:15,081][INFO][freq_trainer:114] - train epoch: 4 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:13:20,642][INFO][freq_trainer:114] - train epoch: 4 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:13:26,159][INFO][freq_trainer:114] - train epoch: 4 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:13:31,738][INFO][freq_trainer:114] - train epoch: 4 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:13:33,455][INFO][freq_trainer:57] - [epoch   4] execution time: 57.45s	metrics:
+[2024-09-12 12:13:33,455][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:13:33,462][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:13:39,335][INFO][freq_trainer:114] - train epoch: 5 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:13:45,173][INFO][freq_trainer:114] - train epoch: 5 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:13:50,674][INFO][freq_trainer:114] - train epoch: 5 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:13:56,129][INFO][freq_trainer:114] - train epoch: 5 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:14:01,610][INFO][freq_trainer:114] - train epoch: 5 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:14:07,053][INFO][freq_trainer:114] - train epoch: 5 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:12,495][INFO][freq_trainer:114] - train epoch: 5 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:18,113][INFO][freq_trainer:114] - train epoch: 5 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:23,581][INFO][freq_trainer:114] - train epoch: 5 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:29,035][INFO][freq_trainer:114] - train epoch: 5 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000008
+[2024-09-12 12:14:30,735][INFO][freq_trainer:57] - [epoch   5] execution time: 57.27s	metrics:
+[2024-09-12 12:14:30,735][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:14:30,743][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:14:36,461][INFO][freq_trainer:114] - train epoch: 6 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000008
+[2024-09-12 12:14:41,934][INFO][freq_trainer:114] - train epoch: 6 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:47,479][INFO][freq_trainer:114] - train epoch: 6 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:14:53,285][INFO][freq_trainer:114] - train epoch: 6 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:14:58,786][INFO][freq_trainer:114] - train epoch: 6 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:15:04,282][INFO][freq_trainer:114] - train epoch: 6 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:09,904][INFO][freq_trainer:114] - train epoch: 6 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:15,536][INFO][freq_trainer:114] - train epoch: 6 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:21,178][INFO][freq_trainer:114] - train epoch: 6 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:26,724][INFO][freq_trainer:114] - train epoch: 6 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:28,411][INFO][freq_trainer:57] - [epoch   6] execution time: 57.67s	metrics:
+[2024-09-12 12:15:28,411][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:15:28,419][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:15:34,252][INFO][freq_trainer:114] - train epoch: 7 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:39,779][INFO][freq_trainer:114] - train epoch: 7 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:45,232][INFO][freq_trainer:114] - train epoch: 7 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:50,736][INFO][freq_trainer:114] - train epoch: 7 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:15:56,546][INFO][freq_trainer:114] - train epoch: 7 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:02,086][INFO][freq_trainer:114] - train epoch: 7 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:16:07,553][INFO][freq_trainer:114] - train epoch: 7 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:16:12,995][INFO][freq_trainer:114] - train epoch: 7 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:18,387][INFO][freq_trainer:114] - train epoch: 7 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:23,868][INFO][freq_trainer:114] - train epoch: 7 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:25,519][INFO][freq_trainer:57] - [epoch   7] execution time: 57.10s	metrics:
+[2024-09-12 12:16:25,520][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:16:25,527][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:16:31,525][INFO][freq_trainer:114] - train epoch: 8 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:37,058][INFO][freq_trainer:114] - train epoch: 8 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:42,628][INFO][freq_trainer:114] - train epoch: 8 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:48,196][INFO][freq_trainer:114] - train epoch: 8 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:16:53,674][INFO][freq_trainer:114] - train epoch: 8 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000270
+[2024-09-12 12:16:59,141][INFO][freq_trainer:114] - train epoch: 8 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:04,809][INFO][freq_trainer:114] - train epoch: 8 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:10,308][INFO][freq_trainer:114] - train epoch: 8 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:17:15,870][INFO][freq_trainer:114] - train epoch: 8 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:21,458][INFO][freq_trainer:114] - train epoch: 8 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:23,210][INFO][freq_trainer:57] - [epoch   8] execution time: 57.68s	metrics:
+[2024-09-12 12:17:23,210][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:17:23,217][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:17:29,155][INFO][freq_trainer:114] - train epoch: 9 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:34,727][INFO][freq_trainer:114] - train epoch: 9 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:40,406][INFO][freq_trainer:114] - train epoch: 9 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:45,895][INFO][freq_trainer:114] - train epoch: 9 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:51,407][INFO][freq_trainer:114] - train epoch: 9 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:17:56,960][INFO][freq_trainer:114] - train epoch: 9 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:02,405][INFO][freq_trainer:114] - train epoch: 9 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:07,844][INFO][freq_trainer:114] - train epoch: 9 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:13,533][INFO][freq_trainer:114] - train epoch: 9 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:19,092][INFO][freq_trainer:114] - train epoch: 9 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:20,906][INFO][freq_trainer:57] - [epoch   9] execution time: 57.69s	metrics:
+[2024-09-12 12:18:20,906][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:18:20,915][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:18:26,823][INFO][freq_trainer:114] - train epoch: 10 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000001
+[2024-09-12 12:18:32,428][INFO][freq_trainer:114] - train epoch: 10 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:38,015][INFO][freq_trainer:114] - train epoch: 10 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:43,495][INFO][freq_trainer:114] - train epoch: 10 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:49,158][INFO][freq_trainer:114] - train epoch: 10 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:18:54,600][INFO][freq_trainer:114] - train epoch: 10 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:19:00,031][INFO][freq_trainer:114] - train epoch: 10 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:05,499][INFO][freq_trainer:114] - train epoch: 10 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:10,952][INFO][freq_trainer:114] - train epoch: 10 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:16,450][INFO][freq_trainer:114] - train epoch: 10 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:18,350][INFO][freq_trainer:57] - [epoch  10] execution time: 57.43s	metrics:
+[2024-09-12 12:19:18,350][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:19:18,359][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:19:24,297][INFO][freq_trainer:114] - train epoch: 11 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:29,832][INFO][freq_trainer:114] - train epoch: 11 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:35,399][INFO][freq_trainer:114] - train epoch: 11 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:41,178][INFO][freq_trainer:114] - train epoch: 11 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:46,668][INFO][freq_trainer:114] - train epoch: 11 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:52,348][INFO][freq_trainer:114] - train epoch: 11 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:19:57,791][INFO][freq_trainer:114] - train epoch: 11 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:03,235][INFO][freq_trainer:114] - train epoch: 11 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:08,667][INFO][freq_trainer:114] - train epoch: 11 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:14,056][INFO][freq_trainer:114] - train epoch: 11 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:15,814][INFO][freq_trainer:57] - [epoch  11] execution time: 57.45s	metrics:
+[2024-09-12 12:20:15,815][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:20:15,822][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:20:21,550][INFO][freq_trainer:114] - train epoch: 12 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:27,216][INFO][freq_trainer:114] - train epoch: 12 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:32,765][INFO][freq_trainer:114] - train epoch: 12 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:38,244][INFO][freq_trainer:114] - train epoch: 12 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:43,676][INFO][freq_trainer:114] - train epoch: 12 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:49,204][INFO][freq_trainer:114] - train epoch: 12 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:20:54,699][INFO][freq_trainer:114] - train epoch: 12 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:00,404][INFO][freq_trainer:114] - train epoch: 12 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:06,078][INFO][freq_trainer:114] - train epoch: 12 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:11,705][INFO][freq_trainer:114] - train epoch: 12 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:13,467][INFO][freq_trainer:57] - [epoch  12] execution time: 57.65s	metrics:
+[2024-09-12 12:21:13,467][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:21:13,475][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:21:19,409][INFO][freq_trainer:114] - train epoch: 13 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:25,066][INFO][freq_trainer:114] - train epoch: 13 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:30,928][INFO][freq_trainer:114] - train epoch: 13 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:36,723][INFO][freq_trainer:114] - train epoch: 13 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:42,484][INFO][freq_trainer:114] - train epoch: 13 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:48,180][INFO][freq_trainer:114] - train epoch: 13 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:53,828][INFO][freq_trainer:114] - train epoch: 13 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:21:59,679][INFO][freq_trainer:114] - train epoch: 13 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:05,581][INFO][freq_trainer:114] - train epoch: 13 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:11,318][INFO][freq_trainer:114] - train epoch: 13 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:12,984][INFO][freq_trainer:57] - [epoch  13] execution time: 59.51s	metrics:
+[2024-09-12 12:22:12,985][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:22:12,992][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:22:19,164][INFO][freq_trainer:114] - train epoch: 14 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:24,843][INFO][freq_trainer:114] - train epoch: 14 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:30,473][INFO][freq_trainer:114] - train epoch: 14 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:36,326][INFO][freq_trainer:114] - train epoch: 14 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:41,987][INFO][freq_trainer:114] - train epoch: 14 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:47,780][INFO][freq_trainer:114] - train epoch: 14 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:53,491][INFO][freq_trainer:114] - train epoch: 14 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:22:59,172][INFO][freq_trainer:114] - train epoch: 14 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:04,807][INFO][freq_trainer:114] - train epoch: 14 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:10,601][INFO][freq_trainer:114] - train epoch: 14 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:12,421][INFO][freq_trainer:57] - [epoch  14] execution time: 59.43s	metrics:
+[2024-09-12 12:23:12,422][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:23:12,429][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:23:18,521][INFO][freq_trainer:114] - train epoch: 15 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:24,243][INFO][freq_trainer:114] - train epoch: 15 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:30,102][INFO][freq_trainer:114] - train epoch: 15 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:35,825][INFO][freq_trainer:114] - train epoch: 15 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:41,527][INFO][freq_trainer:114] - train epoch: 15 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:47,397][INFO][freq_trainer:114] - train epoch: 15 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:53,025][INFO][freq_trainer:114] - train epoch: 15 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:23:58,705][INFO][freq_trainer:114] - train epoch: 15 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:04,364][INFO][freq_trainer:114] - train epoch: 15 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:10,076][INFO][freq_trainer:114] - train epoch: 15 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:11,742][INFO][freq_trainer:57] - [epoch  15] execution time: 59.31s	metrics:
+[2024-09-12 12:24:11,743][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:24:11,752][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:24:19,049][INFO][freq_trainer:114] - train epoch: 16 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:25,385][INFO][freq_trainer:114] - train epoch: 16 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:31,095][INFO][freq_trainer:114] - train epoch: 16 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:36,697][INFO][freq_trainer:114] - train epoch: 16 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:42,286][INFO][freq_trainer:114] - train epoch: 16 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:47,891][INFO][freq_trainer:114] - train epoch: 16 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:53,668][INFO][freq_trainer:114] - train epoch: 16 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:24:59,361][INFO][freq_trainer:114] - train epoch: 16 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:04,991][INFO][freq_trainer:114] - train epoch: 16 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:10,636][INFO][freq_trainer:114] - train epoch: 16 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:12,379][INFO][freq_trainer:57] - [epoch  16] execution time: 60.63s	metrics:
+[2024-09-12 12:25:12,379][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:25:12,387][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:25:18,339][INFO][freq_trainer:114] - train epoch: 17 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:23,963][INFO][freq_trainer:114] - train epoch: 17 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:29,661][INFO][freq_trainer:114] - train epoch: 17 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:35,270][INFO][freq_trainer:114] - train epoch: 17 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:40,791][INFO][freq_trainer:114] - train epoch: 17 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:46,402][INFO][freq_trainer:114] - train epoch: 17 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:51,982][INFO][freq_trainer:114] - train epoch: 17 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:25:57,570][INFO][freq_trainer:114] - train epoch: 17 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:03,340][INFO][freq_trainer:114] - train epoch: 17 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:09,029][INFO][freq_trainer:114] - train epoch: 17 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:10,784][INFO][freq_trainer:57] - [epoch  17] execution time: 58.40s	metrics:
+[2024-09-12 12:26:10,784][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:26:10,792][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:26:16,685][INFO][freq_trainer:114] - train epoch: 18 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:22,369][INFO][freq_trainer:114] - train epoch: 18 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:28,074][INFO][freq_trainer:114] - train epoch: 18 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:33,902][INFO][freq_trainer:114] - train epoch: 18 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:39,508][INFO][freq_trainer:114] - train epoch: 18 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:45,190][INFO][freq_trainer:114] - train epoch: 18 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:50,986][INFO][freq_trainer:114] - train epoch: 18 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:26:56,778][INFO][freq_trainer:114] - train epoch: 18 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:02,465][INFO][freq_trainer:114] - train epoch: 18 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:08,330][INFO][freq_trainer:114] - train epoch: 18 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:10,157][INFO][freq_trainer:57] - [epoch  18] execution time: 59.36s	metrics:
+[2024-09-12 12:27:10,157][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:27:10,164][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:27:16,189][INFO][freq_trainer:114] - train epoch: 19 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:21,782][INFO][freq_trainer:114] - train epoch: 19 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:27,401][INFO][freq_trainer:114] - train epoch: 19 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:33,182][INFO][freq_trainer:114] - train epoch: 19 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:39,111][INFO][freq_trainer:114] - train epoch: 19 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:44,955][INFO][freq_trainer:114] - train epoch: 19 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:50,715][INFO][freq_trainer:114] - train epoch: 19 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:27:56,423][INFO][freq_trainer:114] - train epoch: 19 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:02,188][INFO][freq_trainer:114] - train epoch: 19 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:07,924][INFO][freq_trainer:114] - train epoch: 19 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:09,772][INFO][freq_trainer:57] - [epoch  19] execution time: 59.61s	metrics:
+[2024-09-12 12:28:09,772][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:28:09,779][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:28:16,016][INFO][freq_trainer:114] - train epoch: 20 [9920/100000 (10%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:21,691][INFO][freq_trainer:114] - train epoch: 20 [19904/100000 (20%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:27,348][INFO][freq_trainer:114] - train epoch: 20 [29888/100000 (30%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:32,938][INFO][freq_trainer:114] - train epoch: 20 [39872/100000 (40%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:38,549][INFO][freq_trainer:114] - train epoch: 20 [49856/100000 (50%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:44,306][INFO][freq_trainer:114] - train epoch: 20 [59840/100000 (60%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:49,939][INFO][freq_trainer:114] - train epoch: 20 [69824/100000 (70%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:28:55,534][INFO][freq_trainer:114] - train epoch: 20 [79808/100000 (80%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:29:01,102][INFO][freq_trainer:114] - train epoch: 20 [89792/100000 (90%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:29:06,695][INFO][freq_trainer:114] - train epoch: 20 [99776/100000 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:29:08,412][INFO][freq_trainer:57] - [epoch  20] execution time: 58.63s	metrics:
+[2024-09-12 12:29:08,413][INFO][freq_evaluator:47] - dataset: valid_pretraining, acc: 0.000, hamming: 0.507
+[2024-09-12 12:29:08,423][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:29:08,425][INFO][freq_trainer:67] - finished training
+[2024-09-12 12:29:10,285][INFO][data_loaders:39] - class distribution before data reduction:
+# samples per subject
+02fb158a-a658-51ee-89cf-1e1dc2ebfde1: 861
+03341d0d-5927-5838-8a5f-1b8ef39d8f57: 1063
+039ce8ad-a7fa-5272-a3e3-1f4bfebdd087: 915
+0d79f4b1-e74f-5e87-8e42-f9dd7112ada5: 968
+100df108-eb57-5eaa-a413-f7e4436a7895: 952
+130f3f52-7d0a-551e-af61-2ee75455e5c9: 989
+14c012bd-65b0-56f5-bc74-2dffcea69837: 969
+16450f5a-9b65-5536-85e1-93816c8b89eb: 816
+18482adf-1144-54ca-9e35-27f65c43a105: 824
+18ede714-aba3-5ad8-bb1a-18fc9b1c4192: 995
+1da3544e-dc5c-5795-adc3-f5068959211f: 955
+2159377e-ebf3-5565-9014-1e2ae69dc1d2: 907
+2d01dc34-f36c-562e-b24a-d20dc798fdfc: 837
+2e865ca9-e20f-5a6f-bd25-45d28cc9eab9: 950
+30e8a05b-4cf1-5aa8-9ef7-28d6e2949ad5: 699
+32556393-bb57-560a-99e8-e09885219647: 1106
+3dd35e7b-d7e2-516d-8a85-e0d58a59569f: 1093
+3e842aa8-bcd9-521e-93a2-72124233fe2c: 620
+4b72b905-5521-5c57-b666-e20ff9bb195f: 868
+4e3c4ac4-69e2-5347-a3b0-662c204d259d: 926
+52fbe46b-206c-584a-9f4f-1eb308e07bac: 1064
+5b94ec8a-c34d-5e45-84d1-bec2ea965609: 1090
+5bf0f969-304c-581e-949c-50c108f62846: 947
+5ddbc68c-1283-5c27-952b-d7f102291bc2: 1097
+64959ac4-53b5-5868-a845-c7476e9fdf7b: 990
+67fa8e29-6f4d-530e-9422-bbc3aca86ed0: 1046
+6e2aa933-c51c-5a31-8c7b-83da8d076a12: 905
+730aba3b-e310-5be0-9eed-7c3123466834: 1120
+742f1592-627c-54eb-bbb5-ccd55ffae33a: 975
+769df255-2284-50b3-8917-2155c759fbbd: 929
+79e8a04e-0fdd-53ae-bedc-d49d08e29103: 918
+7ab8ff5f-a77f-567d-9882-f8bee0c3c9bf: 989
+7d778801-88e7-5086-ad1d-70f31a371876: 999
+7f5237b1-2196-5c8a-9543-a5aa70210ef4: 931
+83c1394e-9c69-5c11-9102-9ff8d59b1cfd: 1011
+844f68ba-265e-53e6-bf47-6c85d1804a7b: 957
+90aef91a-252f-5ccc-a82e-78ea7ee9ca1f: 1089
+a25b2296-343b-53f6-8792-ada2669d466e: 1008
+a35a118e-e65e-5928-92a9-4354a6a0f4ce: 813
+a6254c8a-f1b2-5736-b601-18245dd5e0a5: 1084
+a65a9e69-cddf-5711-9a97-de8bfdeb08cc: 961
+a79d1f0e-c133-5aa0-8268-cdcc05825f0f: 1046
+aadc9e0c-b7c3-5a47-851d-f21971d10935: 969
+b2d3ccdd-395c-5dd2-81d9-252bcfc0c337: 902
+b3706da5-748b-5dd1-a552-f57e4456cdf6: 1041
+b5d5785d-87ee-5078-b9b9-aac6abd4d8de: 918
+c8110476-594c-533d-95bd-86147fccc987: 995
+cc3b4b63-4a6f-5f28-ac7e-62f83c271449: 1076
+d3cadb78-cb8c-5a6e-885c-392e457c68b1: 982
+d5181c33-a43b-5dfe-8ad7-0337facb092a: 977
+e6b7cbef-4c9d-5541-82e8-04810de0fb60: 819
+e72505f1-21be-5d66-b620-cfcfa2d754bc: 973
+e8ec8ec4-dc48-50ce-985a-a06d87861030: 975
+eb95076c-c470-56a4-b788-ace310f061c6: 965
+f2a69bdc-ed51-5e3f-b102-6b3f7d392be0: 960
+f66bc75e-778b-5037-af86-b5275cd4c79f: 865
+
+# samples per stage
+0: 9111
+1: 2876
+2: 26255
+3: 6343
+4: 9114
+[2024-09-12 12:29:10,531][INFO][data_loaders:43] - class distribution after data reduction:
+# samples per subject
+b3706da5-748b-5dd1-a552-f57e4456cdf6: 53091
+
+# samples per stage
+0: 7599
+1: 2754
+2: 26316
+3: 1836
+4: 14586
+[2024-09-12 12:29:10,543][INFO][base_pretraining_fe:55] - Loading model from XXX/frequency-pretraining/models/exp021a-m3-simple_multi_class-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:29:10,809][INFO][data_loaders:39] - class distribution before data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+1fa6c401-d819-50f5-8146-a0bb9e2b2516: 986
+22bea84c-5d23-5e49-bc2d-9764f883955b: 1048
+25a6b2b0-4d09-561b-82c6-f09bb271d3be: 1063
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+b3534fa3-7676-50dc-8412-07f0eff4f7a9: 757
+
+# samples per stage
+0: 1372
+1: 412
+2: 3945
+3: 905
+4: 1309
+[2024-09-12 12:29:10,826][INFO][data_loaders:43] - class distribution after data reduction:
+# samples per subject
+0416d51f-5d69-5326-b74a-a2e31a96a1ef: 822
+119f9726-eb4c-5a0e-a7bb-9e15256149a1: 932
+1fa6c401-d819-50f5-8146-a0bb9e2b2516: 986
+22bea84c-5d23-5e49-bc2d-9764f883955b: 1048
+25a6b2b0-4d09-561b-82c6-f09bb271d3be: 1063
+6a7503ac-ab3a-5d5b-b474-4b0fe37748dd: 1213
+a30245e3-4a71-565f-9636-92e7d2e825fc: 1122
+b3534fa3-7676-50dc-8412-07f0eff4f7a9: 757
+
+# samples per stage
+0: 1372
+1: 412
+2: 3945
+3: 905
+4: 1309
+[2024-09-12 12:29:10,836][INFO][clas_trainer:49] - metrics before training (epoch 0):
+[2024-09-12 12:29:25,733][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.0671
+[2024-09-12 12:29:35,653][INFO][clas_trainer:133] - train epoch: 1 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 1.152954
+[2024-09-12 12:29:45,060][INFO][clas_trainer:133] - train epoch: 1 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.554776
+[2024-09-12 12:29:54,651][INFO][clas_trainer:133] - train epoch: 1 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.417212
+[2024-09-12 12:30:04,119][INFO][clas_trainer:133] - train epoch: 1 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.596448
+[2024-09-12 12:30:13,301][INFO][clas_trainer:133] - train epoch: 1 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.647929
+[2024-09-12 12:30:22,933][INFO][clas_trainer:133] - train epoch: 1 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.423154
+[2024-09-12 12:30:32,406][INFO][clas_trainer:133] - train epoch: 1 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.195879
+[2024-09-12 12:30:41,953][INFO][clas_trainer:133] - train epoch: 1 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.119153
+[2024-09-12 12:30:51,282][INFO][clas_trainer:133] - train epoch: 1 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.333949
+[2024-09-12 12:31:00,955][INFO][clas_trainer:133] - train epoch: 1 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.018758
+[2024-09-12 12:31:16,115][INFO][clas_trainer:63] - [epoch   1] execution time: 110.38s	metrics:
+[2024-09-12 12:31:16,115][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2648
+[2024-09-12 12:31:16,126][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-base_fe_clas-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:31:26,070][INFO][clas_trainer:133] - train epoch: 2 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.156388
+[2024-09-12 12:31:35,612][INFO][clas_trainer:133] - train epoch: 2 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.075814
+[2024-09-12 12:31:45,147][INFO][clas_trainer:133] - train epoch: 2 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.102663
+[2024-09-12 12:31:54,549][INFO][clas_trainer:133] - train epoch: 2 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.088875
+[2024-09-12 12:32:04,104][INFO][clas_trainer:133] - train epoch: 2 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.026720
+[2024-09-12 12:32:13,697][INFO][clas_trainer:133] - train epoch: 2 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.157351
+[2024-09-12 12:32:23,295][INFO][clas_trainer:133] - train epoch: 2 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.057047
+[2024-09-12 12:32:32,659][INFO][clas_trainer:133] - train epoch: 2 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.148756
+[2024-09-12 12:32:42,420][INFO][clas_trainer:133] - train epoch: 2 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.053708
+[2024-09-12 12:32:51,830][INFO][clas_trainer:133] - train epoch: 2 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.023544
+[2024-09-12 12:33:07,101][INFO][clas_trainer:63] - [epoch   2] execution time: 110.97s	metrics:
+[2024-09-12 12:33:07,101][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3061
+[2024-09-12 12:33:07,112][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-base_fe_clas-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:33:17,333][INFO][clas_trainer:133] - train epoch: 3 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.043401
+[2024-09-12 12:33:26,880][INFO][clas_trainer:133] - train epoch: 3 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.106260
+[2024-09-12 12:33:36,380][INFO][clas_trainer:133] - train epoch: 3 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.118800
+[2024-09-12 12:33:46,098][INFO][clas_trainer:133] - train epoch: 3 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.017562
+[2024-09-12 12:33:55,337][INFO][clas_trainer:133] - train epoch: 3 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.139885
+[2024-09-12 12:34:04,824][INFO][clas_trainer:133] - train epoch: 3 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.007374
+[2024-09-12 12:34:14,248][INFO][clas_trainer:133] - train epoch: 3 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.075286
+[2024-09-12 12:34:23,915][INFO][clas_trainer:133] - train epoch: 3 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.008090
+[2024-09-12 12:34:33,241][INFO][clas_trainer:133] - train epoch: 3 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.006252
+[2024-09-12 12:34:42,458][INFO][clas_trainer:133] - train epoch: 3 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000249
+[2024-09-12 12:34:57,819][INFO][clas_trainer:63] - [epoch   3] execution time: 110.71s	metrics:
+[2024-09-12 12:34:57,819][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2708
+[2024-09-12 12:35:07,739][INFO][clas_trainer:133] - train epoch: 4 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.025652
+[2024-09-12 12:35:17,317][INFO][clas_trainer:133] - train epoch: 4 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.002538
+[2024-09-12 12:35:26,955][INFO][clas_trainer:133] - train epoch: 4 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.014199
+[2024-09-12 12:35:36,226][INFO][clas_trainer:133] - train epoch: 4 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.051347
+[2024-09-12 12:35:45,608][INFO][clas_trainer:133] - train epoch: 4 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.059489
+[2024-09-12 12:35:54,809][INFO][clas_trainer:133] - train epoch: 4 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.028982
+[2024-09-12 12:36:04,293][INFO][clas_trainer:133] - train epoch: 4 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.014803
+[2024-09-12 12:36:13,830][INFO][clas_trainer:133] - train epoch: 4 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.088632
+[2024-09-12 12:36:23,060][INFO][clas_trainer:133] - train epoch: 4 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.002349
+[2024-09-12 12:36:32,394][INFO][clas_trainer:133] - train epoch: 4 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.003699
+[2024-09-12 12:36:47,386][INFO][clas_trainer:63] - [epoch   4] execution time: 109.57s	metrics:
+[2024-09-12 12:36:47,386][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2804
+[2024-09-12 12:36:57,308][INFO][clas_trainer:133] - train epoch: 5 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.000697
+[2024-09-12 12:37:06,976][INFO][clas_trainer:133] - train epoch: 5 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.010900
+[2024-09-12 12:37:16,566][INFO][clas_trainer:133] - train epoch: 5 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.143247
+[2024-09-12 12:37:25,890][INFO][clas_trainer:133] - train epoch: 5 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.028924
+[2024-09-12 12:37:35,277][INFO][clas_trainer:133] - train epoch: 5 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.001387
+[2024-09-12 12:37:44,610][INFO][clas_trainer:133] - train epoch: 5 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.007514
+[2024-09-12 12:37:53,894][INFO][clas_trainer:133] - train epoch: 5 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.017748
+[2024-09-12 12:38:03,218][INFO][clas_trainer:133] - train epoch: 5 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.004477
+[2024-09-12 12:38:12,836][INFO][clas_trainer:133] - train epoch: 5 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.011060
+[2024-09-12 12:38:22,115][INFO][clas_trainer:133] - train epoch: 5 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000000
+[2024-09-12 12:38:37,231][INFO][clas_trainer:63] - [epoch   5] execution time: 109.84s	metrics:
+[2024-09-12 12:38:37,231][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2942
+[2024-09-12 12:38:47,237][INFO][clas_trainer:133] - train epoch: 6 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.001865
+[2024-09-12 12:38:56,687][INFO][clas_trainer:133] - train epoch: 6 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.082371
+[2024-09-12 12:39:06,213][INFO][clas_trainer:133] - train epoch: 6 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.056409
+[2024-09-12 12:39:15,470][INFO][clas_trainer:133] - train epoch: 6 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.000650
+[2024-09-12 12:39:25,161][INFO][clas_trainer:133] - train epoch: 6 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.013384
+[2024-09-12 12:39:34,420][INFO][clas_trainer:133] - train epoch: 6 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.002461
+[2024-09-12 12:39:43,826][INFO][clas_trainer:133] - train epoch: 6 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.017568
+[2024-09-12 12:39:53,269][INFO][clas_trainer:133] - train epoch: 6 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.053373
+[2024-09-12 12:40:02,635][INFO][clas_trainer:133] - train epoch: 6 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.034123
+[2024-09-12 12:40:11,967][INFO][clas_trainer:133] - train epoch: 6 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000002
+[2024-09-12 12:40:27,097][INFO][clas_trainer:63] - [epoch   6] execution time: 109.87s	metrics:
+[2024-09-12 12:40:27,097][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3033
+[2024-09-12 12:40:36,899][INFO][clas_trainer:133] - train epoch: 7 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.016873
+[2024-09-12 12:40:46,294][INFO][clas_trainer:133] - train epoch: 7 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.012150
+[2024-09-12 12:40:55,808][INFO][clas_trainer:133] - train epoch: 7 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.000578
+[2024-09-12 12:41:05,264][INFO][clas_trainer:133] - train epoch: 7 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.002017
+[2024-09-12 12:41:14,571][INFO][clas_trainer:133] - train epoch: 7 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.000620
+[2024-09-12 12:41:24,195][INFO][clas_trainer:133] - train epoch: 7 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.001259
+[2024-09-12 12:41:33,764][INFO][clas_trainer:133] - train epoch: 7 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.009709
+[2024-09-12 12:41:43,212][INFO][clas_trainer:133] - train epoch: 7 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.012795
+[2024-09-12 12:41:52,370][INFO][clas_trainer:133] - train epoch: 7 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.012550
+[2024-09-12 12:42:01,853][INFO][clas_trainer:133] - train epoch: 7 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000823
+[2024-09-12 12:42:16,991][INFO][clas_trainer:63] - [epoch   7] execution time: 109.89s	metrics:
+[2024-09-12 12:42:16,991][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2766
+[2024-09-12 12:42:26,735][INFO][clas_trainer:133] - train epoch: 8 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.001200
+[2024-09-12 12:42:36,222][INFO][clas_trainer:133] - train epoch: 8 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.006100
+[2024-09-12 12:42:45,622][INFO][clas_trainer:133] - train epoch: 8 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.013099
+[2024-09-12 12:42:54,865][INFO][clas_trainer:133] - train epoch: 8 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.001691
+[2024-09-12 12:43:04,266][INFO][clas_trainer:133] - train epoch: 8 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.001615
+[2024-09-12 12:43:13,706][INFO][clas_trainer:133] - train epoch: 8 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.002179
+[2024-09-12 12:43:23,110][INFO][clas_trainer:133] - train epoch: 8 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.000624
+[2024-09-12 12:43:32,572][INFO][clas_trainer:133] - train epoch: 8 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.000439
+[2024-09-12 12:43:42,113][INFO][clas_trainer:133] - train epoch: 8 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.007640
+[2024-09-12 12:43:51,351][INFO][clas_trainer:133] - train epoch: 8 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.001762
+[2024-09-12 12:44:06,507][INFO][clas_trainer:63] - [epoch   8] execution time: 109.52s	metrics:
+[2024-09-12 12:44:06,507][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3331
+[2024-09-12 12:44:06,519][INFO][base_model:51] - snapshot saved to XXX/frequency-pretraining/models/exp021a-m3-base_fe_clas-2024-09-12_12-09-21-final.pth
+[2024-09-12 12:44:16,581][INFO][clas_trainer:133] - train epoch: 9 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.002546
+[2024-09-12 12:44:25,990][INFO][clas_trainer:133] - train epoch: 9 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.005301
+[2024-09-12 12:44:35,435][INFO][clas_trainer:133] - train epoch: 9 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.000265
+[2024-09-12 12:44:44,842][INFO][clas_trainer:133] - train epoch: 9 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.021119
+[2024-09-12 12:44:54,330][INFO][clas_trainer:133] - train epoch: 9 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.002126
+[2024-09-12 12:45:03,774][INFO][clas_trainer:133] - train epoch: 9 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.000686
+[2024-09-12 12:45:13,162][INFO][clas_trainer:133] - train epoch: 9 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.000293
+[2024-09-12 12:45:22,680][INFO][clas_trainer:133] - train epoch: 9 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.002293
+[2024-09-12 12:45:31,917][INFO][clas_trainer:133] - train epoch: 9 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.010488
+[2024-09-12 12:45:41,213][INFO][clas_trainer:133] - train epoch: 9 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000005
+[2024-09-12 12:45:56,444][INFO][clas_trainer:63] - [epoch   9] execution time: 109.92s	metrics:
+[2024-09-12 12:45:56,444][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2942
+[2024-09-12 12:46:06,343][INFO][clas_trainer:133] - train epoch: 10 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.000807
+[2024-09-12 12:46:15,792][INFO][clas_trainer:133] - train epoch: 10 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.002048
+[2024-09-12 12:46:25,571][INFO][clas_trainer:133] - train epoch: 10 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.001718
+[2024-09-12 12:46:35,118][INFO][clas_trainer:133] - train epoch: 10 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.001202
+[2024-09-12 12:46:44,689][INFO][clas_trainer:133] - train epoch: 10 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.001475
+[2024-09-12 12:46:53,903][INFO][clas_trainer:133] - train epoch: 10 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.003263
+[2024-09-12 12:47:03,420][INFO][clas_trainer:133] - train epoch: 10 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.019536
+[2024-09-12 12:47:12,594][INFO][clas_trainer:133] - train epoch: 10 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.023200
+[2024-09-12 12:47:21,847][INFO][clas_trainer:133] - train epoch: 10 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.001585
+[2024-09-12 12:47:31,149][INFO][clas_trainer:133] - train epoch: 10 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000133
+[2024-09-12 12:47:46,311][INFO][clas_trainer:63] - [epoch  10] execution time: 109.87s	metrics:
+[2024-09-12 12:47:46,312][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3019
+[2024-09-12 12:47:56,251][INFO][clas_trainer:133] - train epoch: 11 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.008465
+[2024-09-12 12:48:05,943][INFO][clas_trainer:133] - train epoch: 11 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.007952
+[2024-09-12 12:48:15,414][INFO][clas_trainer:133] - train epoch: 11 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.012648
+[2024-09-12 12:48:24,730][INFO][clas_trainer:133] - train epoch: 11 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.000334
+[2024-09-12 12:48:34,143][INFO][clas_trainer:133] - train epoch: 11 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.000638
+[2024-09-12 12:48:43,598][INFO][clas_trainer:133] - train epoch: 11 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.000314
+[2024-09-12 12:48:53,034][INFO][clas_trainer:133] - train epoch: 11 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.030225
+[2024-09-12 12:49:02,360][INFO][clas_trainer:133] - train epoch: 11 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.000289
+[2024-09-12 12:49:11,798][INFO][clas_trainer:133] - train epoch: 11 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.000515
+[2024-09-12 12:49:21,225][INFO][clas_trainer:133] - train epoch: 11 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000403
+[2024-09-12 12:49:36,111][INFO][clas_trainer:63] - [epoch  11] execution time: 109.80s	metrics:
+[2024-09-12 12:49:36,112][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2968
+[2024-09-12 12:49:46,055][INFO][clas_trainer:133] - train epoch: 12 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.008010
+[2024-09-12 12:49:55,497][INFO][clas_trainer:133] - train epoch: 12 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.008583
+[2024-09-12 12:50:04,880][INFO][clas_trainer:133] - train epoch: 12 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.002377
+[2024-09-12 12:50:14,567][INFO][clas_trainer:133] - train epoch: 12 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.005604
+[2024-09-12 12:50:24,043][INFO][clas_trainer:133] - train epoch: 12 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.001016
+[2024-09-12 12:50:33,699][INFO][clas_trainer:133] - train epoch: 12 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.002503
+[2024-09-12 12:50:42,961][INFO][clas_trainer:133] - train epoch: 12 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.000622
+[2024-09-12 12:50:52,509][INFO][clas_trainer:133] - train epoch: 12 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.001093
+[2024-09-12 12:51:01,777][INFO][clas_trainer:133] - train epoch: 12 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.007259
+[2024-09-12 12:51:11,286][INFO][clas_trainer:133] - train epoch: 12 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000989
+[2024-09-12 12:51:26,585][INFO][clas_trainer:63] - [epoch  12] execution time: 110.47s	metrics:
+[2024-09-12 12:51:26,586][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3011
+[2024-09-12 12:51:36,391][INFO][clas_trainer:133] - train epoch: 13 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.005712
+[2024-09-12 12:51:45,877][INFO][clas_trainer:133] - train epoch: 13 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.010346
+[2024-09-12 12:51:55,291][INFO][clas_trainer:133] - train epoch: 13 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.001316
+[2024-09-12 12:52:04,906][INFO][clas_trainer:133] - train epoch: 13 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.001574
+[2024-09-12 12:52:14,282][INFO][clas_trainer:133] - train epoch: 13 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.002628
+[2024-09-12 12:52:23,855][INFO][clas_trainer:133] - train epoch: 13 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.005514
+[2024-09-12 12:52:33,435][INFO][clas_trainer:133] - train epoch: 13 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.010434
+[2024-09-12 12:52:43,012][INFO][clas_trainer:133] - train epoch: 13 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.001148
+[2024-09-12 12:52:52,421][INFO][clas_trainer:133] - train epoch: 13 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.003028
+[2024-09-12 12:53:01,978][INFO][clas_trainer:133] - train epoch: 13 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000839
+[2024-09-12 12:53:17,410][INFO][clas_trainer:63] - [epoch  13] execution time: 110.82s	metrics:
+[2024-09-12 12:53:17,410][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2981
+[2024-09-12 12:53:27,324][INFO][clas_trainer:133] - train epoch: 14 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.002064
+[2024-09-12 12:53:36,738][INFO][clas_trainer:133] - train epoch: 14 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.001001
+[2024-09-12 12:53:46,472][INFO][clas_trainer:133] - train epoch: 14 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.031947
+[2024-09-12 12:53:55,772][INFO][clas_trainer:133] - train epoch: 14 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.001971
+[2024-09-12 12:54:05,247][INFO][clas_trainer:133] - train epoch: 14 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.000831
+[2024-09-12 12:54:14,516][INFO][clas_trainer:133] - train epoch: 14 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.001765
+[2024-09-12 12:54:24,203][INFO][clas_trainer:133] - train epoch: 14 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.003107
+[2024-09-12 12:54:33,533][INFO][clas_trainer:133] - train epoch: 14 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.000476
+[2024-09-12 12:54:43,075][INFO][clas_trainer:133] - train epoch: 14 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.004499
+[2024-09-12 12:54:52,436][INFO][clas_trainer:133] - train epoch: 14 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.006638
+[2024-09-12 12:55:07,531][INFO][clas_trainer:63] - [epoch  14] execution time: 110.12s	metrics:
+[2024-09-12 12:55:07,531][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3011
+[2024-09-12 12:55:17,370][INFO][clas_trainer:133] - train epoch: 15 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.004455
+[2024-09-12 12:55:26,895][INFO][clas_trainer:133] - train epoch: 15 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.033871
+[2024-09-12 12:55:36,395][INFO][clas_trainer:133] - train epoch: 15 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.007138
+[2024-09-12 12:55:45,673][INFO][clas_trainer:133] - train epoch: 15 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.003786
+[2024-09-12 12:55:55,190][INFO][clas_trainer:133] - train epoch: 15 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.003273
+[2024-09-12 12:56:04,556][INFO][clas_trainer:133] - train epoch: 15 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.002949
+[2024-09-12 12:56:14,061][INFO][clas_trainer:133] - train epoch: 15 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.000665
+[2024-09-12 12:56:23,250][INFO][clas_trainer:133] - train epoch: 15 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.013659
+[2024-09-12 12:56:32,894][INFO][clas_trainer:133] - train epoch: 15 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.003706
+[2024-09-12 12:56:42,097][INFO][clas_trainer:133] - train epoch: 15 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000017
+[2024-09-12 12:56:57,227][INFO][clas_trainer:63] - [epoch  15] execution time: 109.70s	metrics:
+[2024-09-12 12:56:57,227][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2868
+[2024-09-12 12:57:07,303][INFO][clas_trainer:133] - train epoch: 16 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.002158
+[2024-09-12 12:57:16,624][INFO][clas_trainer:133] - train epoch: 16 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.000604
+[2024-09-12 12:57:26,083][INFO][clas_trainer:133] - train epoch: 16 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.008000
+[2024-09-12 12:57:35,574][INFO][clas_trainer:133] - train epoch: 16 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.007279
+[2024-09-12 12:57:44,909][INFO][clas_trainer:133] - train epoch: 16 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.005293
+[2024-09-12 12:57:54,301][INFO][clas_trainer:133] - train epoch: 16 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.006345
+[2024-09-12 12:58:03,791][INFO][clas_trainer:133] - train epoch: 16 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.015038
+[2024-09-12 12:58:13,412][INFO][clas_trainer:133] - train epoch: 16 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.010250
+[2024-09-12 12:58:22,584][INFO][clas_trainer:133] - train epoch: 16 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.002516
+[2024-09-12 12:58:31,805][INFO][clas_trainer:133] - train epoch: 16 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.020450
+[2024-09-12 12:58:47,153][INFO][clas_trainer:63] - [epoch  16] execution time: 109.93s	metrics:
+[2024-09-12 12:58:47,153][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.2828
+[2024-09-12 12:58:56,997][INFO][clas_trainer:133] - train epoch: 17 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.000934
+[2024-09-12 12:59:06,371][INFO][clas_trainer:133] - train epoch: 17 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.027488
+[2024-09-12 12:59:16,154][INFO][clas_trainer:133] - train epoch: 17 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.002262
+[2024-09-12 12:59:25,373][INFO][clas_trainer:133] - train epoch: 17 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.000836
+[2024-09-12 12:59:34,906][INFO][clas_trainer:133] - train epoch: 17 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.000547
+[2024-09-12 12:59:44,304][INFO][clas_trainer:133] - train epoch: 17 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.002112
+[2024-09-12 12:59:53,904][INFO][clas_trainer:133] - train epoch: 17 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.001607
+[2024-09-12 13:00:03,192][INFO][clas_trainer:133] - train epoch: 17 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.002415
+[2024-09-12 13:00:12,675][INFO][clas_trainer:133] - train epoch: 17 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.068624
+[2024-09-12 13:00:22,094][INFO][clas_trainer:133] - train epoch: 17 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.000896
+[2024-09-12 13:00:37,314][INFO][clas_trainer:63] - [epoch  17] execution time: 110.16s	metrics:
+[2024-09-12 13:00:37,314][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3143
+[2024-09-12 13:00:47,145][INFO][clas_trainer:133] - train epoch: 18 [5280/53091 (10%)], lr: ['1.00e-04'], loss: 0.002292
+[2024-09-12 13:00:56,725][INFO][clas_trainer:133] - train epoch: 18 [10592/53091 (20%)], lr: ['1.00e-04'], loss: 0.002634
+[2024-09-12 13:01:06,175][INFO][clas_trainer:133] - train epoch: 18 [15904/53091 (30%)], lr: ['1.00e-04'], loss: 0.013383
+[2024-09-12 13:01:15,589][INFO][clas_trainer:133] - train epoch: 18 [21216/53091 (40%)], lr: ['1.00e-04'], loss: 0.000489
+[2024-09-12 13:01:24,901][INFO][clas_trainer:133] - train epoch: 18 [26528/53091 (50%)], lr: ['1.00e-04'], loss: 0.001522
+[2024-09-12 13:01:34,523][INFO][clas_trainer:133] - train epoch: 18 [31840/53091 (60%)], lr: ['1.00e-04'], loss: 0.003687
+[2024-09-12 13:01:43,732][INFO][clas_trainer:133] - train epoch: 18 [37152/53091 (70%)], lr: ['1.00e-04'], loss: 0.001166
+[2024-09-12 13:01:53,143][INFO][clas_trainer:133] - train epoch: 18 [42464/53091 (80%)], lr: ['1.00e-04'], loss: 0.001279
+[2024-09-12 13:02:02,397][INFO][clas_trainer:133] - train epoch: 18 [47776/53091 (90%)], lr: ['1.00e-04'], loss: 0.004627
+[2024-09-12 13:02:12,005][INFO][clas_trainer:133] - train epoch: 18 [4977/53091 (100%)], lr: ['1.00e-04'], loss: 0.008095
+[2024-09-12 13:02:27,109][INFO][clas_trainer:63] - [epoch  18] execution time: 109.79s	metrics:
+[2024-09-12 13:02:27,109][INFO][clas_evaluator:99] - dataset: earlystopping, avg f1-score: 0.3146
+[2024-09-12 13:02:27,113][INFO][clas_trainer:79] - finished training
+[2024-09-12 13:02:27,113][INFO][clas_trainer:80] - best model on epoch: 8 	f1-score: 0.3331

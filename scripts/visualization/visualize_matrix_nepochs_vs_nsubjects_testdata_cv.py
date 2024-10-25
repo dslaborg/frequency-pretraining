@@ -1,234 +1,56 @@
 """
-This script creates Figure 3 in the paper. It visualizes the macro F1 scores on the test data for different numbers of
-subjects and numbers of epochs used for fine-tuning. The figure consists of three subplots: a) the mean F1 scores for
-exp002a, b) the mean F1 scores for exp002b, and c) the difference between the mean F1 scores for exp002b and exp002a.
-The difference is calculated as exp002b - exp002a with a bootstrapping approach , i.e. positive values indicate that
-exp002b performed better than exp002a.
+This script creates Figure 3 in the paper. It visualizes the macro F1 scores on the test data for different datasets
+(DODO/H, Sleep-EDFx, ISRUC) and different numbers of subjects and epochs used for fine-tuning. The figure consists of
+nine subplots: a) the mean F1 scores for exp004a, b) the mean F1 scores for exp005a, c) the mean F1 scores for exp006a,
+d) the mean F1 scores for exp004c, e) the mean F1 scores for exp005c, f) the mean F1 scores for exp006c, g) the difference
+between the mean F1 scores for exp004c and exp004a, h) the difference between the mean F1 scores for exp005c and exp005a,
+i) the difference between the mean F1 scores for exp006c and exp006a.
+The difference is calculated as exp004b - exp004a with a bootstrapping approach, i.e. positive values indicate that
+exp004b performed better than exp004a.
 """
-import json
+
 import re
-from glob import glob
-from os.path import isdir, join, dirname, abspath
 
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
+from utils import parse_result_folder
+
 sns.set_style("white")
 
-ignore_folders = [".hydra"]
-ignore_keys = [
-    "+dummy",
-    "+ignore",
-    "m_seed_path",
-    "seeds",
-    "data.dod_o_h.channels",
-    "data.normalize",
-    "data.norm_length",
-    "m_seed_path_sids",
-]
-colors = ["red", "green", "blue", "orange", "purple", "cyan", "black", "grey"]
+expid_to_sortkey = {
+    "exp0..a.*": 0,
+    "exp0..c.*": 1,
+}
 
+expid_to_dataset = {
+    "exp004.*": "DODO/H",
+    "exp005.*": "Sleep-EDFx",
+    "exp006.*": "ISRUC",
+}
 
-def read_log(path: str) -> dict[str, any]:
-    """
-    Read the log file of a training/evaluation run and extract the overrides that were used for the run. The overrides
-    contain parameters set specifically for this run, e.g. the number of subjects in the training data or the seeds.
-    """
-    with open(path) as f:
-        all_lines = [line.removesuffix("\n") for line in f.readlines()]
+dataset_to_sortkey = {
+    "DODO/H": 0,
+    "Sleep-EDFx": 1,
+    "ISRUC": 2,
+}
 
-        # the override block in the logs starts with "task:" and ends with the next line that does not start with a
-        # "-" character
-        override_start_line = [
-            i for i, line in enumerate(all_lines) if line == "task:"
-        ][0]
-        overrides = {}
-        for line in all_lines[override_start_line + 1 :]:
-            if line.startswith("-"):
-                # format of the overrides is "- key=value"
-                override_line = line[2:].split("=")
-                overrides[override_line[0]] = override_line[1]
-                # try to convert the value to int or float if possible
-                try:
-                    overrides[override_line[0]] = int(override_line[1])
-                except ValueError:
-                    pass
-                try:
-                    overrides[override_line[0]] = float(override_line[1])
-                except ValueError:
-                    pass
-                if override_line[1].startswith('"') and override_line[1].endswith('"'):
-                    overrides[override_line[0]] = override_line[1][1:-1]
-            else:
-                break
-    return overrides
-
-
-def parse_result_folder(
-    result_folder: str, reg_filter: str
-) -> dict[str, dict[int, dict[int, list[float]]]]:
-    """
-    Parse the parent folder of the separate experiment folders (e.g. exp002) and extract the F1 scores for the
-    downstream task on the test data. The F1 scores are grouped by the number of subjects and epochs in the training
-    data and the experiment id.
-    Since the training logs don't contain the test F1 scores and the test logs don't contain the number of subjects, we
-    need to match the training and test logs by the model path. This is done by reading the "m_seed_path_sids" override
-    from the test log and comparing it to the "m_seed_path_sids" override from the training log.
-
-    :param result_folder: The parent folder of the experiment folders (e.g. path to exp001 in the logs)
-    :param reg_filter: A regular expression to filter the experiment ids. Only experiment ids that match the regular
-    expression will be included in the result. This functions expects the regex to filter for the sweeps that were used
-    to evaluate the models by the experiment ids and the sweep index. E.g. ".*a_1|.*b_2" will include the second sweep
-    of experiment a and the third sweep of experiment b (sweep indices are 0-based).
-
-    :return: A dictionary containing the F1 scores for each experiment, number of subjects, and number of epochs in the
-    training data.
-    Format: {exp_id: {n_subjects: {n_epochs: [f1_scores]}}}
-    """
-
-    reg_filter = re.compile(reg_filter)
-    # folder_structure is a nested dictionary that contains the folder structure of the experiment folders. It is
-    # structured as follows: {exp_folder: {sweep_folder: [run_folders]}}
-    folder_structure = {
-        ef: {
-            sw: sorted(
-                [p for p in glob(join(sw, "*")) if isdir(p)],
-                key=lambda x: int(x.split("/")[-1]),
-            )
-            for sw in sorted(glob(f"{ef}/sweep*"))
-        }
-        for ef in sorted(glob(f"{result_folder}/*"))
-    }
-    f1_scores = {}  # exp_id: n_subjects: n_epochs: [f1_score]
-
-    for exp_f in folder_structure.keys():
-        for i, sweep_folder in enumerate(folder_structure[exp_f].keys()):
-            print(sweep_folder)
-            sweep_f1_scores = {}  # n_subjects: n_epochs: [f1_score]
-            exp_id = f'{exp_f.split("/")[-1]}_{i}'
-
-            if reg_filter.match(exp_id) is None:
-                continue
-
-            for run_folder in folder_structure[exp_f][sweep_folder]:
-                # find eval log file in run_folder
-                eval_log_file = glob(join(run_folder, "*.log"))
-                if len(eval_log_file) == 0:
-                    print(f"WARNING: no downstream log file found in {run_folder}")
-                    continue
-                eval_log_file = eval_log_file[0]
-
-                # find matching train log file by searching for the train log that contains the model path from the eval
-                # log
-                # read eval log and extract model path
-                eval_run_overrides = read_log(eval_log_file)
-                m_seed_path_sids = re.sub(
-                    ':([^{"].*?[^\\\])([,}])',
-                    ':"\g<1>"\g<2>',
-                    eval_run_overrides["m_seed_path_sids"],
-                )
-                m_seed_path_sids = re.sub(
-                    "([{,])(.*?):", '\g<1>"\g<2>":', m_seed_path_sids
-                )
-                m_seed_path_sids = m_seed_path_sids.replace("\\", "\\\\")
-                path_and_fold = json.loads(m_seed_path_sids)
-                model_path = path_and_fold["path"]
-
-                # load all train log files and find the one that contains the model path
-                all_train_log_files = np.concatenate(
-                    [
-                        glob(join(f, "fine-tune.log"))
-                        for sw in folder_structure[exp_f].keys()
-                        for f in folder_structure[exp_f][sw]
-                    ]
-                )
-                train_log_file = list(
-                    filter(
-                        lambda x: model_path in "".join(open(x).readlines()),
-                        all_train_log_files,
-                    )
-                )
-                if len(train_log_file) == 0 or len(train_log_file) > 1:
-                    print(
-                        f"WARNING: no matching train log file or multiple matching files found for {model_path}"
-                    )
-                    continue
-
-                # read eval log and extract F1 score
-                eval_result_file = join(run_folder, "results.json")
-                with open(eval_result_file) as f:
-                    results = json.load(f)
-                run_f1_score = results["test"]["metrics"]["downstream"]["f1_scores"][
-                    "macro"
-                ][0]
-
-                # read train log and extract number of subjects
-                run_overrides = read_log(train_log_file[0])
-                n_subjects = 0
-                n_epochs = 0
-                for param, val in run_overrides.items():
-                    if param in ignore_keys:
-                        continue
-                    if (
-                        param
-                        == "data.downstream.train_dataloader.dataset.data_reducer.n_epochs"
-                    ):
-                        n_epochs = int(val)
-                    elif (
-                        param
-                        == "data.downstream.train_dataloader.dataset.data_reducer.n_subjects"
-                    ):
-                        n_subjects = int(val)
-                    else:
-                        print(f"WARNING: unknown override key: {param}")
-
-                if n_subjects in sweep_f1_scores:
-                    if n_epochs in sweep_f1_scores[n_subjects]:
-                        sweep_f1_scores[n_subjects][n_epochs].append(run_f1_score)
-                    else:
-                        sweep_f1_scores[n_subjects][n_epochs] = [run_f1_score]
-                else:
-                    sweep_f1_scores[n_subjects] = {n_epochs: [run_f1_score]}
-            if len(sweep_f1_scores) != 0:
-                f1_scores[exp_id] = sweep_f1_scores
-
-    return f1_scores
+letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
 
 
 def plot_matrix(
-    matrix_color_values: np.ndarray,
-    matrix_print_values: np.ndarray,
-    axis: plt.Axes,
-    title: str,
-    xticks: list[str],
-    yticks: list[str],
-    max_color: float = 1.0,
-    min_color: float = 0.0,
+    matrix_colors,
+    matrix_values,
+    axis,
+    xticks,
+    yticks,
+    max_color=1.0,
+    min_color=0.0,
 ):
-    """
-    Plot a matrix with the given color values and print values. The color values are used to color the cells of the
-    matrix, the print values are used as labels inside the cells.
-
-    :param matrix_color_values: The values that are used to color the cells of the matrix.
-    :param matrix_print_values: The values that are printed inside the cells of the matrix.
-    :param axis: The axis on which the matrix is plotted.
-    :param title: The title of the plot.
-    :param xticks: The labels for the x-axis.
-    :param yticks: The labels for the y-axis.
-    :param max_color: The maximum value of the color scale. Allows to set the same color scale for multiple plots even
-    though the maximum value in matrix_color_values might differ.
-    :param min_color: The minimum value of the color scale. Allows to set the same color scale for multiple plots even
-    though the minimum value in matrix_color_values might differ.
-    :return:
-    """
-    assert matrix_color_values.shape == matrix_print_values.shape, (
-        f"The shape of the color matrix {matrix_color_values.shape} does not match the shape of the "
-        f"label matrix {matrix_print_values.shape}"
-    )
-    # plot the colored regions of the matrix
+    assert matrix_colors.shape == matrix_values.shape
     axis.imshow(
-        matrix_color_values,
+        matrix_colors,
         interpolation="nearest",
         cmap="Blues",
         vmin=min_color,
@@ -236,174 +58,294 @@ def plot_matrix(
     )
     # we want to show all ticks...
     axis.set(
-        xticks=np.arange(matrix_print_values.shape[1]),
-        yticks=np.arange(matrix_print_values.shape[0]),
-        # ... and label them with the respective tick labels.
+        xticks=np.arange(matrix_values.shape[1]),
+        yticks=np.arange(matrix_values.shape[0]),
+        # ... and label them with the respective stages
         xticklabels=xticks,
         yticklabels=yticks,
-        title=title,
     )
-    plt.ylim(matrix_print_values.shape[0] - 0.5, -0.5)
+    plt.ylim(matrix_values.shape[0] - 0.5, -0.5)
+
+    # rotate the tick labels and set their alignment.
+    plt.setp(
+        axis.get_xticklabels()
+    )  # , rotation=45, ha='right', rotation_mode='anchor')
 
     # loop over data dimensions and create text annotations.
-    thresh = (max_color + min_color) / 2  # threshold for text color (black or white)
-    for i in range(matrix_print_values.shape[0]):
-        for j in range(matrix_print_values.shape[1]):
+    thresh = (max_color + min_color) / 2
+    for i in range(matrix_values.shape[0]):
+        for j in range(matrix_values.shape[1]):
             axis.text(
                 j,
                 i,
-                str(matrix_print_values[i, j]),
+                matrix_values[i, j],
                 ha="center",
                 va="center",
-                color="white" if matrix_color_values[i, j] > thresh else "black",
+                color="white" if matrix_colors[i, j] > thresh else "black",
             )
 
 
 def main():
-    # relative path to the experiment folder containing the sub-experiments
-    base_path_of_file = dirname(abspath(__file__))
-    result_folder = join(base_path_of_file, "../../logs/exp002")
+    dataset = "test"
+    error_mode = "bootstrap"  # 'simple', 'bootstrap', 'error_propagation'
 
-    # we want the results of the second multirun of exp002a and the third multirun of exp002b
-    experiment1 = "exp002a_1"
-    experiment2 = "exp002b_2"
-    # f1_scores format is: {exp_id: {n_subjects: {n_epochs: [f1_scores]}}}
-    f1_scores = parse_result_folder(result_folder, f".*{experiment1}|.*{experiment2}")
+    # f1_scores format is: {exp_id: [{n_subjects: n_subjects, n_epochs: n_epochs, f1_score: f1_score}, ...]}
+    n_epochs_key = "data.downstream.train_dataloader.dataset.data_reducer.n_epochs"
+    n_subjects_key = "data.downstream.train_dataloader.dataset.data_reducer.n_subjects"
+    result_folder = "../../logs/exp004"
+    f1_scores = parse_result_folder(
+        result_folder, dataset, ".*a_1|.*c_1", [n_epochs_key, n_subjects_key]
+    )
+
+    result_folder = "../../logs/exp005"
+    add_f1_scores = parse_result_folder(
+        result_folder, dataset, ".*a_1|.*c_1", [n_epochs_key, n_subjects_key]
+    )
+    f1_scores.update(add_f1_scores)
+
+    result_folder = "../../logs/exp006"
+    add_f1_scores = parse_result_folder(
+        result_folder, dataset, ".*a_1|.*c_1", [n_epochs_key, n_subjects_key]
+    )
+    f1_scores.update(add_f1_scores)
+
     print(f1_scores)
 
-    # extract the number of subjects and epochs from the f1_scores dictionary
-    # the -1 value should be at the end instead of the start of the list, so we remove the first element and append -1
-    n_epochs_list = list(list(list(f1_scores.values())[0].values())[0])[1:] + [-1]
-    # reverse the list for the correct order in the plot
-    n_epochs_list = n_epochs_list[::-1]
-    n_subjects_list = list(f1_scores.values())[0].keys()
+    # list of datasets represented by the experiments
+    datasets = sorted(
+        list(
+            {
+                [v for k, v in expid_to_dataset.items() if re.fullmatch(k, exp)][0]
+                for exp in f1_scores.keys()
+            }
+        ),
+        key=lambda x: dataset_to_sortkey[x],
+    )
 
-    # plot a matrix of n_epochs vs n_subjects showing the difference between the mf1 score between exp002a and exp002b
-    # values for panel a: the labels are string representations of the mean f1 scores with standard deviation
-    # the color values are the mean f1 scores
-    matrix_labels_panel_a = [
-        ["" for _ in range(len(n_subjects_list))] for _ in range(len(n_epochs_list))
-    ]
-    matrix_color_panel_a = np.zeros((len(n_epochs_list), len(n_subjects_list)))
+    _, axes = plt.subplots(
+        3, len(datasets), sharex="all", sharey="all", figsize=(15, 15)
+    )
+    axes = axes.flatten()
 
-    # values for panel b: the labels are string representations of the mean f1 scores with standard deviation
-    # the color values are the mean f1 scores
-    matrix_labels_panel_b = [
-        ["" for _ in range(len(n_subjects_list))] for _ in range(len(n_epochs_list))
-    ]
-    matrix_color_panel_b = np.zeros((len(n_epochs_list), len(n_subjects_list)))
+    for col_idx, dataset in enumerate(datasets):
+        # load scores of the current dataset
+        f1_scores_dataset = {
+            e: f1_scores[e]
+            for e in f1_scores.keys()
+            if [v for k, v in expid_to_dataset.items() if re.fullmatch(k, e)][0]
+            == dataset
+        }
 
-    # values for panel c: the labels are string representations of the difference between the mean f1 scores
-    # (calculated as exp002b - exp002a with a bootstrapping approach) with standard deviations of the bootstrapped
-    # differences
-    # the color values are the mean differences between the bootstrapped mean f1 scores
-    matrix_color_panel_c = np.zeros((len(n_epochs_list), len(n_subjects_list)))
-    matrix_labels_panel_c = [
-        ["" for _ in range(len(n_subjects_list))] for _ in range(len(n_epochs_list))
-    ]
+        n_epochs_list = [
+            e[n_epochs_key] for e_arr in f1_scores_dataset.values() for e in e_arr
+        ]
+        n_epochs_list = list(set(n_epochs_list))
+        n_epochs_list = sorted(
+            n_epochs_list, key=lambda x: 1e6 if x == -1 else x, reverse=True
+        )
+        n_subjects_list = [
+            e[n_subjects_key] for e_arr in f1_scores_dataset.values() for e in e_arr
+        ]
+        n_subjects_list = sorted(list(set(n_subjects_list)))
 
-    for i, n_epochs in enumerate(n_epochs_list):
-        for j, n_subjects in enumerate(n_subjects_list):
-            exp1_scores = f1_scores[experiment1][n_subjects][n_epochs]
-            exp2_scores = f1_scores[experiment2][n_subjects][n_epochs]
+        # matrices to store the mean f1 scores and their standard deviations of the two experiments and their difference
+        # the last dimension of the matrices is used to store the mean and the standard deviation
+        matrix_raw_diff = np.zeros((len(n_epochs_list), len(n_subjects_list), 2))
+        matrix_raw_1 = np.zeros((len(n_epochs_list), len(n_subjects_list), 2))
+        matrix_raw_2 = np.zeros((len(n_epochs_list), len(n_subjects_list), 2))
 
-            # fill labels and colors for panel a and b
-            matrix_labels_panel_a[i][
-                j
-            ] = f"{np.mean(exp1_scores):.2f}\n±{np.std(exp1_scores):.2f}"
-            matrix_color_panel_a[i][j] = np.mean(exp1_scores)
+        exps_sorted = sorted(
+            f1_scores_dataset.keys(),
+            key=lambda x: [
+                v for k, v in expid_to_sortkey.items() if re.fullmatch(k, x)
+            ][0],
+        )
+        exp1_key, exp2_key = exps_sorted
 
-            matrix_labels_panel_b[i][
-                j
-            ] = f"{np.mean(exp2_scores):.2f}\n±{np.std(exp2_scores):.2f}"
-            matrix_color_panel_b[i][j] = np.mean(exp2_scores)
+        for i, n_epochs in enumerate(n_epochs_list):
+            for j, n_subjects in enumerate(n_subjects_list):
+                # load scores for n_epochs and n_subjects
+                exp1_scores = [
+                    e["f1_score"]
+                    for e in f1_scores_dataset[exp1_key]
+                    if e[n_epochs_key] == n_epochs and e[n_subjects_key] == n_subjects
+                ]
+                exp2_scores = [
+                    e["f1_score"]
+                    for e in f1_scores_dataset[exp2_key]
+                    if e[n_epochs_key] == n_epochs and e[n_subjects_key] == n_subjects
+                ]
+                if error_mode == "simple":
+                    diff_mean = np.mean(exp2_scores) - np.mean(exp1_scores)
+                    diff_std = np.std(exp2_scores) - np.std(exp1_scores)
+                elif error_mode == "bootstrap":
+                    # create 10_000 bootstrap samples and calculate their mean and standard deviation
+                    # bootstrap samples are defined as the difference between the mean f1 score of a random sample of
+                    # exp2_scores and the mean f1 score of a random sample of exp1_scores
+                    sample_size = min(len(exp1_scores), len(exp2_scores))
+                    bootstrap_samples = np.array(
+                        [
+                            np.mean(np.random.choice(exp2_scores, sample_size))
+                            - np.mean(np.random.choice(exp1_scores, sample_size))
+                            for _ in range(10_000)
+                        ]
+                    )
+                    diff_mean = np.mean(bootstrap_samples)
+                    diff_std = np.std(bootstrap_samples)
+                elif error_mode == "error_propagation":
+                    # see https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
+                    diff_mean = np.mean(exp2_scores) - np.mean(exp1_scores)
+                    diff_std = np.sqrt(
+                        np.std(exp2_scores) ** 2 + np.std(exp1_scores) ** 2
+                    )
+                else:
+                    raise ValueError(f"Unknown error mode: {error_mode}")
 
-            # bootstrap the difference between the mean f1 scores
-            # the sample size is equal to the number of runs
-            sample_size = min(len(exp1_scores), len(exp2_scores))
-            # calculate 10,000 bootstrap samples, each bootstrap sample is the difference between the mean f1 scores
-            # of a random sample of scores from exp002b and exp002a
-            bootstrap_samples = np.array(
+                matrix_raw_diff[i, j, :] = diff_mean, diff_std
+                matrix_raw_1[i, j, :] = np.mean(exp1_scores), np.std(exp1_scores)
+                matrix_raw_2[i, j, :] = np.mean(exp2_scores), np.std(exp2_scores)
+
+        matrix_raw_diff = np.round(matrix_raw_diff, 2)
+        matrix_raw_1 = np.round(matrix_raw_1, 2)
+        matrix_raw_2 = np.round(matrix_raw_2, 2)
+
+        def pretty_print(matrix):
+            """Pretty print a matrix with mean and standard deviation in the following format: mean\n±std"""
+            return np.array(
                 [
-                    np.mean(np.random.choice(exp2_scores, sample_size))
-                    - np.mean(np.random.choice(exp1_scores, sample_size))
-                    for _ in range(10_000)
+                    [
+                        f"{matrix[i, j, 0]:.2f}\n±{matrix[i, j, 1]:.2f}"
+                        for j in range(len(n_subjects_list))
+                    ]
+                    for i in range(len(n_epochs_list))
                 ]
             )
-            # calculate the mean and standard deviation of the bootstrap samples
-            diff_mean = np.mean(bootstrap_samples)
-            diff_std = np.std(bootstrap_samples)
 
-            # fill labels and colors for panel c
-            matrix_labels_panel_c[i][j] = f"{diff_mean:.2f}\n±{diff_std:.2f}"
-            matrix_color_panel_c[i, j] = diff_mean
+        matrix_print_diff = pretty_print(matrix_raw_diff)
+        matrix_print_1 = pretty_print(matrix_raw_1)
+        matrix_print_2 = pretty_print(matrix_raw_2)
 
-    # convert labels to numpy arrays for plotting
-    matrix_labels_panel_a = np.array(matrix_labels_panel_a)
-    matrix_labels_panel_b = np.array(matrix_labels_panel_b)
-    matrix_labels_panel_c = np.array(matrix_labels_panel_c)
+        y_ticks = [
+            f"{n_epochs}" if n_epochs > 0 else "all" for n_epochs in n_epochs_list
+        ]
 
-    # round color values to two decimal places equivalent to the labels
-    matrix_color_panel_c = np.round(matrix_color_panel_c, 2)
-    matrix_color_panel_a = np.round(matrix_color_panel_a, 2)
-    matrix_color_panel_b = np.round(matrix_color_panel_b, 2)
+        # use the same coloring for the scores of exp1 and exp2
+        min_color = np.min(
+            [np.min(matrix_raw_1[:, :, 0]), np.min(matrix_raw_2[:, :, 0])]
+        )
+        max_color = np.max(
+            [np.max(matrix_raw_1[:, :, 0]), np.max(matrix_raw_2[:, :, 0])]
+        )
+        plot_matrix(
+            matrix_raw_1[:, :, 0],
+            matrix_print_1,
+            axes[col_idx],
+            n_subjects_list,
+            y_ticks,
+            max_color,
+            min_color,
+        )
+        plt.colorbar(axes[col_idx].get_images()[0], ax=axes[col_idx])
+        axes[col_idx].set_title(letters[col_idx], weight="bold")
 
-    # plot with three panels
-    fig, axes = plt.subplots(1, 3, sharex="all", sharey="all")
-    axes = axes.flatten()
-    # x-axis labels are the number of subjects, y-axis labels are the number of epochs
-    x_ticks = [f"{n_subjects}" for n_subjects in n_subjects_list]
-    y_ticks = [
-        f"{n_epochs}" if n_epochs > 0 else "all" for n_epochs in n_epochs_list
-    ]  # replace -1 with "all"
+        plot_matrix(
+            matrix_raw_2[:, :, 0],
+            matrix_print_2,
+            axes[col_idx + len(datasets)],
+            n_subjects_list,
+            y_ticks,
+            max_color,
+            min_color,
+        )
+        plt.colorbar(
+            axes[col_idx + len(datasets)].get_images()[0],
+            ax=axes[col_idx + len(datasets)],
+        )
+        axes[col_idx + len(datasets)].set_title(
+            letters[col_idx + len(datasets)], weight="bold"
+        )
 
-    # panels a and b share the same color scale, so we calculate the minimum and maximum color values for both panels
-    min_color = np.min([np.min(matrix_color_panel_a), np.min(matrix_color_panel_b)])
-    max_color = np.max([np.max(matrix_color_panel_a), np.max(matrix_color_panel_b)])
-    plot_matrix(
-        matrix_color_panel_a,
-        matrix_labels_panel_a,
-        axes[0],
-        "",
-        x_ticks,
-        y_ticks,
-        max_color,
-        min_color,
+        plot_matrix(
+            matrix_raw_diff[:, :, 0],
+            matrix_print_diff,
+            axes[col_idx + 2 * len(datasets)],
+            n_subjects_list,
+            y_ticks,
+            np.max(matrix_raw_diff[:, :, 0]),
+            np.min(matrix_raw_diff[:, :, 0]),
+        )
+        plt.colorbar(
+            axes[col_idx + 2 * len(datasets)].get_images()[0],
+            ax=axes[col_idx + 2 * len(datasets)],
+        )
+        axes[col_idx + 2 * len(datasets)].set_title(
+            letters[col_idx + 2 * len(datasets)], weight="bold"
+        )
+
+        axes[col_idx + 2 * len(datasets)].set_xlabel("Number of subjects")
+    axes[0].set_ylabel("Fully Supervised\nNumber of epochs")
+    axes[len(datasets)].set_ylabel("Fine-tuned feature extractor\nNumber of epochs")
+    axes[2 * len(datasets)].set_ylabel("Bootstrapped difference\nNumber of epochs")
+
+    plt.text(
+        0.5,
+        1.08,
+        "DODO/H",
+        transform=axes[0].transAxes,
+        size=12,
+        weight="bold",
+        horizontalalignment="center",
     )
-    axes[0].set_xlabel("Number of subjects")
-    axes[0].set_ylabel("Number of epochs")
-    plt.colorbar(axes[0].get_images()[0], ax=axes[0])
-
-    plot_matrix(
-        matrix_color_panel_b,
-        matrix_labels_panel_b,
-        axes[1],
-        "",
-        x_ticks,
-        y_ticks,
-        max_color,
-        min_color,
+    plt.text(
+        0.5,
+        1.08,
+        "Sleep-EDFx",
+        transform=axes[1].transAxes,
+        size=12,
+        weight="bold",
+        horizontalalignment="center",
     )
-    axes[1].set_xlabel("Number of subjects")
-    plt.colorbar(axes[1].get_images()[0], ax=axes[1])
-
-    plot_matrix(
-        matrix_color_panel_c,
-        matrix_labels_panel_c,
-        axes[2],
-        "",
-        x_ticks,
-        y_ticks,
-        np.max(matrix_color_panel_c),
-        np.min(matrix_color_panel_c),
+    plt.text(
+        0.5,
+        1.08,
+        "ISRUC",
+        transform=axes[2].transAxes,
+        size=12,
+        weight="bold",
+        horizontalalignment="center",
     )
-    axes[2].set_xlabel("Number of subjects")
-    plt.colorbar(axes[2].get_images()[0], ax=axes[2])
+    plt.text(
+        -0.4,
+        0.5,
+        "Fully supervised",
+        transform=axes[0].transAxes,
+        size=12,
+        weight="bold",
+        rotation=90,
+        verticalalignment="center",
+    )
+    plt.text(
+        -0.4,
+        0.5,
+        "Fine-tuned feature extractor",
+        transform=axes[3].transAxes,
+        size=12,
+        weight="bold",
+        rotation=90,
+        verticalalignment="center",
+    )
+    plt.text(
+        -0.4,
+        0.5,
+        "Bootstrapped difference",
+        transform=axes[6].transAxes,
+        size=12,
+        weight="bold",
+        rotation=90,
+        verticalalignment="center",
+    )
 
-    plt.text(0.48, 1.03, "a", transform=axes[0].transAxes, size=12, weight="bold")
-    plt.text(0.48, 1.03, "b", transform=axes[1].transAxes, size=12, weight="bold")
-    plt.text(0.48, 1.03, "c", transform=axes[2].transAxes, size=12, weight="bold")
-
+    plt.tight_layout()
     plt.show()
 
 
