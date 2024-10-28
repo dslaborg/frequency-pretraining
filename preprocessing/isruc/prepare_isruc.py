@@ -170,6 +170,7 @@ def main():
         "--output_dir",
         "-o",
         type=str,
+        default="cache/isruc",
         help="Directory where to save numpy files outputs.",
     )
     args = parser.parse_args()
