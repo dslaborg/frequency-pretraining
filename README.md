@@ -7,7 +7,8 @@ Implementation of Frequency Pretraining (FPT) as described in:
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series
 > Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
 
-Part of our work was presented at the ICLR 2024 Workshop on Learning from Time Series for Health:
+Part of our work was presented at the ICLR 2024 Workshop on Learning from Time Series for Health (the code for this
+version of the paper can be found in the `ts4h-ext-abstract-version` branch):
 
 > Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Pretraining Sleep Staging Models without Patient Data. In
 *ICLR 2024 Workshop on Learning from Time Series for Health*, Vienna, Austria, 2024.
