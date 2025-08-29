@@ -56,11 +56,7 @@ cd frequency-pretraining
 conda create -n fpt python=3.10
 conda activate fpt
 
-# install pytorch following the instructions at https://pytorch.org/get-started/locally/
-# e.g. for CUDA 12.1
-conda install pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
-
-# install remaining dependencies
+# install dependencies
 pip install -r requirements.txt
 ```
 
@@ -70,11 +66,7 @@ pip install -r requirements.txt
 git clone https://github.com/dslaborg/frequency-pretraining.git
 cd frequency-pretraining
 
-# install pytorch following the instructions at https://pytorch.org/get-started/locally/
-# e.g. for the latest CUDA version
-pip install torch
-
-# install remaining dependencies
+# install dependencies
 pip install -r requirements.txt
 ```
 
