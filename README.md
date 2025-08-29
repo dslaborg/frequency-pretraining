@@ -48,7 +48,7 @@ The project is set up as follows:
 On Linux and Windows the project can be used by running the following commands to clone the repository and install the
 required dependencies.
 
-### Either with `anaconda` or `miniconda` installed (recommended)
+### Either with `anaconda`, `miniconda`, or `miniforge` installed (recommended)
 
 ```shell
 git clone https://github.com/dslaborg/frequency-pretraining.git
