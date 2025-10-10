@@ -4,8 +4,7 @@
 
 Implementation of Frequency Pretraining (FPT) as described in:
 
-> Niklas Grieger, Siamak Mehrkanoon and Stephan Bialonski. Data-Efficient Sleep Staging with Synthetic Time Series
-> Pretraining. arXiv:2403.08592, 2021. URL https://arxiv.org/abs/2403.08592
+> Grieger N, Mehrkanoon S, Bialonski S. Data-Efficient Sleep Staging with Synthetic Time Series Pretraining. *Algorithms*. 2025; 18(9):580. https://doi.org/10.3390/a18090580
 
 Part of our work was presented at the ICLR 2024 Workshop on Learning from Time Series for Health (the code for this
 version of the paper can be found in the `ts4h-ext-abstract-version` branch):
