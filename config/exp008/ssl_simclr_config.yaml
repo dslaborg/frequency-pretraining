@@ -1,0 +1,233 @@
+# base configuration for the exp008 series of experiments
+
+# import dataloaders from templates so this config is not as cluttered
+defaults:
+  - ../base_config@_global_
+  - ../data/base_dreem@_global_
+  - ../data/base_sleepedfx@_global_
+  - ../data/base_isruc@_global_
+  - ../data/template_dataloader_dreem@data.downstream.train_dataloader
+  - ../data/template_dataloader_dreem@data.downstream.earlystopping_dataloader
+  - ../data/template_dataloader_dreem@data.downstream.test_dataloader
+  - _self_
+
+# dummy variable to connect various variables that depend on each other
+# e.g., if you want to do a second run of an experiment with a different seed, you probably want to change the path as well (see manual.md for possible use cases)
+m_seed_path_sids:
+  # data seed, model pretraining seed, model downstream seed, training pretraining seed, training downstream seed
+  seeds: [ null, null, null, null, null ]
+  # path to the pretrained model
+  path: 'same_run'  # model.downstream.feature_extractor.path
+  # subject ids for the different splits, this needs to be changed for cross validation runs
+  subject_ids:
+    dod_o_h: ${data.dod_o_h.hold_out}  # data.dod_o_h.subject_ids
+
+seeds: ${m_seed_path_sids.seeds}
+
+# configurations regarding the dataloading
+data:
+  # clamp value for the iqr scaling used to scale the sleep data
+  clamp_value: 20
+
+  dod_o_h:
+    # subject ids for the different splits
+    subject_ids: ${m_seed_path_sids.subject_ids.dod_o_h}  # dict with subject ids
+  sleepedfx:
+    subject_ids: ${data.sleepedfx.full}  # dict with subject ids
+  isruc:
+    subject_ids: ${data.isruc.full}  # dict with subject ids
+
+  pretraining:
+    # dataloaders for the pretraining
+    train_dataloader:
+      _target_: torch.utils.data.DataLoader
+      batch_size: 64
+      shuffle: True
+      num_workers: 20
+      multiprocessing_context: fork  # necessary for joblib launcher
+      dataset:
+        _target_: base.data.ssl_data_loader.AugmentedDataset
+        subject_ids:
+          sleepedfx: ${data.sleepedfx.subject_ids}
+          isruc: ${data.isruc.subject_ids}
+        meta_obj:
+          sleepedfx:
+            _target_: base.data.meta_sleepedfx.MetaSleepEdfx
+            data_path: ${data.sleepedfx.path}
+          isruc:
+            _target_: base.data.meta_isruc.MetaIsruc
+            data_path: ${data.isruc.path}
+        channels:
+          sleepedfx: ${data.sleepedfx.channels}
+          isruc: ${data.isruc.channels}
+        data_augmentors:
+          - _target_: base.data.data_augmentation.AmplitudeScale
+            max_fac: 2
+            seed: ${seeds[0]}
+          - _target_: base.data.data_augmentation.NormalNoise
+            sigma: 0.05
+            seed: ${seeds[0]}
+          - _target_: base.data.data_augmentation.SegmentMask
+            lower: 0.05
+            upper: 0.1
+            num: 10
+            seed: ${seeds[0]}
+          - _target_: base.data.data_augmentation.TimeShift
+            max_shift: 0.05
+            seed: ${seeds[0]}
+          - _target_: base.data.data_augmentation.TimeWarp
+            max_fac: 1.5
+            seed: ${seeds[0]}
+
+  downstream:
+    # context around the middel epoch of a sequence (see data_loaders.py for more details)
+    left_epochs: 5
+    right_epochs: 5
+
+    # dataloaders for fine-tuning
+    train_dataloader:
+      shuffle: True
+      dataset:
+        # subject ids to train on
+        subject_ids: ${data.dod_o_h.subject_ids.train}
+        # configuration that allows the reduction of the amount of training data (see data_reducer.py for more details)
+        data_reducer:
+          _target_: base.data.data_reducer.SubjectWiseFixedEpochsDataReducer
+          n_subjects: -1
+          n_epochs: -1
+          repeat_samples: true
+          seed: ${seeds[0]}
+    earlystopping_dataloader:
+      batch_size: 512
+      dataset:
+        # subject ids to validate on
+        subject_ids: ${data.dod_o_h.subject_ids.valid}
+    test_dataloader:
+      batch_size: 512
+      dataset:
+        # subject ids to test on
+        subject_ids: ${data.dod_o_h.subject_ids.test}
+
+# configurations regarding the model
+model:
+  pretraining:
+    _target_: base.model.pretraining.simclr.SimClrModel
+    # the encode is the feature extractor of the TinySleepNet
+    encoder:
+      _target_: base.model.fe_tinysleepnet.FeTinySleepNet
+      filters: 128
+      dropout: [ 0.5, 0.5 ]
+      seed: ${seeds[1]}
+    # output size of the encoder
+    encoding_size: 512  # 4*128 (number of outputs * number of filters)
+    projector_dims: [ 128, 128 ]
+    temperature: 0.1
+    # yes, because this is the config for pretraining
+    is_pretraining: true
+    seed: ${seeds[1]}
+
+  downstream:
+    _target_: base.model.base_fe_clas.BaseFeClasModel
+    # in the standard configuration, the feature extractor is not fine-tuned; this is changed in the configurations of the individual experiments
+    finetune_feature_extractor: False
+    # basically the same as the pretraining model but with a different path and different is_pretraining flag
+    feature_extractor:
+      _target_: ${model.pretraining._target_}
+      encoder: ${model.pretraining.encoder}
+      encoding_size: ${model.pretraining.encoding_size}
+      projector_dims: ${model.pretraining.projector_dims}
+      temperature: ${model.pretraining.temperature}
+      is_pretraining: false
+      # important, where to load the pretrained model from
+      path: ${m_seed_path_sids.path}
+      seed: ${seeds[2]}
+    # the classifier is the same as in the TinySleepNet (but bidirectional)
+    classifier:
+      _target_: base.model.clas_tinysleepnet.ClasTinySleepNet
+      # output size of the feature extractor/encoder
+      feature_size: 512  # 128 filters * 4 (number of outputs * number of filters)
+      dropout: 0.5
+      hidden_size: 128
+      bidirectional: True
+      seed: ${seeds[2]}
+
+# configurations regarding the training processes
+training:
+  pretraining:
+    lr_scheduler: # no lr scheduling (constant lr)
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      lr: 1e-4
+    trainer:
+      _target_: base.training.ssl_trainer.SSLTrainer
+      # number of training epochs
+      epochs: 20
+      model: ${model.pretraining}
+      # dataloader for the training data
+      dataloader: ${data.pretraining.train_dataloader}
+      # how often to log the training progress
+      log_interval: 10
+      # no gradient clipping
+      clip_gradients: False
+      # only save the last model
+      add_epoch_in_save: False
+      # evaluate the model on the synthetic validation set
+      evaluators: {}
+      seed: ${seeds[3]}
+
+  downstream:
+    lr_scheduler: # no lr scheduling (constant lr)
+      _target_: base.training.lr_scheduler.CyclicCosineDecayLR
+      init_decay_epochs: 1
+      min_decay_lr_multiplier: 1.0
+      restart_interval: null
+      restart_interval_multiplier: null
+      restart_lr_multiplier: null
+      warmup_epochs: null
+      warmup_start_lr_multiplier: null
+    optimizer:
+      _target_: torch.optim.Adam
+      # lr is set in trainer
+      weight_decay: 1e-3
+    trainer:
+      _target_: base.training.clas_trainer.ClasTrainer
+      # number of training epochs
+      epochs: 50
+      clip_gradients: 5.0
+      # lr is set here instead of the optimizer to be able to specify different learning rates for the feature extractor and the classifier
+      lr: 1e-4
+      # during fine-tuning, we use early stopping with a patience of 10 training epochs
+      early_stopping_epochs: 10
+      # dataloader for the training data
+      dataloader: ${data.downstream.train_dataloader}
+      model: ${model.downstream}
+      # how often to log the training progress
+      log_interval: 10
+      # evaluate the model on the validation set after each training epoch
+      evaluators:
+        earlystopping: ${evaluators.downstream.earlystopping}
+      seed: ${seeds[4]}
+
+# configuration for different evaluators, allows to add or switch out evaluators easily
+evaluators:
+  downstream:
+    train:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: 'train'
+      dataloader: ${data.downstream.train_dataloader}
+    earlystopping:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: 'earlystopping'
+      dataloader: ${data.downstream.earlystopping_dataloader}
+    test:
+      _target_: base.evaluation.clas_evaluator.ClasEvaluator
+      dataset: 'test'
+      dataloader: ${data.downstream.test_dataloader}

@@ -16,8 +16,8 @@
     * exp003c: pre-training + downstream training with finetuning of the FE, full training data; 3 different seeds
     * exp003d: no pre-training + downstream training with frozen FE, full training data; 3 different seeds
 * exp004 (DODO/H datasets; explore number of epochs and subjects)
-    * exp004a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (
-      each with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
+    * exp004a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (each
+      with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
     * exp004b: pre-training + downstream training with fixed FE, training in the lowest data regime (n_subjects=1 and
       n_epochs=50); 3 different seeds
     * exp004c: pre-training + downstream training with finetuning of the FE, a Gridsearch over the following
@@ -26,8 +26,8 @@
     * exp004d: no pre-training + downstream training with frozen FE, training in the lowest data regime (n_subjects=1
       and n_epochs=50); 3 different seeds
 * exp005 (Sleep-EDFx dataset; explore number of epochs and subjects)
-    * exp005a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (
-      each with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
+    * exp005a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (each
+      with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
     * exp005b: pre-training + downstream training with fixed FE, training in the lowest data regime (n_subjects=1
       and n_epochs=50); 3 different seeds
     * exp005c: pre-training + downstream training with finetuning of the FE, a Gridsearch over the following
@@ -36,8 +36,8 @@
     * exp005d: no pre-training + downstream training with frozen FE, training in the lowest data regime (n_subjects=1
       and n_epochs=50); 3 different seeds
 * exp006 (ISRUC dataset; explore number of epochs and subjects)
-    * exp006a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (
-      each with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
+    * exp006a: fully supervised training, a Gridsearch over the following hyperparameter combinations is performed (each
+      with 3 different seeds): n_epochs in [-1,50,130,340,900], n_subjects in [1,2,3,4,5]
     * exp006b: pre-training + downstream training with fixed FE, training in the lowest data regime (n_subjects=1
       and n_epochs=50); 3 different seeds
     * exp006c: pre-training + downstream training with finetuning of the FE, a Gridsearch over the following
@@ -49,6 +49,18 @@
     * exp007a: pre-training + downstream training with frozen FE, exploration of various pretraining hyperparameters
     * exp007b: pre-training + downstream training with finetuning of the FE, exploration of various pretraining
       hyperparameters
+* exp008 (SimCLR on SleepEDFx and ISRUC, fine-tuning on DODO/H)
+    * exp008a: pre-training + downstream training with frozen FE
+    * exp008b: pre-training + downstream training with finetuning of the FE
+* exp009 (VICReg on SleepEDFx and ISRUC, fine-tuning on DODO/H)
+    * exp009a: pre-training + downstream training with frozen FE
+    * exp009b: pre-training + downstream training with finetuning of the FE
+* exp010 (SimCLR on synthetic frequency data, fine-tuning on DODO/H)
+    * exp010a: pre-training + downstream training with frozen FE
+    * exp010b: pre-training + downstream training with finetuning of the FE
+* exp011 (VICReg on synthetic frequency data, fine-tuning on DODO/H)
+    * exp011a: pre-training + downstream training with frozen FE
+    * exp011b: pre-training + downstream training with finetuning of the FE
 
 # Run Descriptions
 
@@ -57,7 +69,7 @@ Folder structure of the `logs/` directory:
 * exp001
     * exp001a
         * sweep-2023-10-13_14-21-17: training with 3 different seeds for 6 different subject numbers (we only need the
-          full subject number) --> 3*6*5=90 "runs" in total
+          full subject number) --> 3 *6*5=90 "runs" in total
         * sweep-2023-12-19_12-39-56: evaluation of sweep-2023-10-13_14-21-17 on the test folds
     * exp001b
         * 2023-11-28_14-13-48: single pretraining run with files containing the ground truth frequency bins and the
@@ -72,7 +84,7 @@ Folder structure of the `logs/` directory:
         * sweep-2023-12-19_12-55-43: evaluation of sweep-2023-10-13_17-19-04 on the test folds
     * exp001d
         * sweep-2023-10-13_16-19-02: training with 3 different seeds for 6 different subject numbers (we only need the
-          full subject number) --> 3*6*5=90 "runs" in total
+          full subject number) --> 3 *6*5=90 "runs" in total
         * sweep-2023-12-19_13-03-30: evaluation of sweep-2023-10-13_16-19-02 on the test folds
 * exp002
     * exp002a
@@ -108,7 +120,7 @@ Folder structure of the `logs/` directory:
         * sweep-2024-10-02_10-36-54: evaluation of sweep-2024-10-01_22-37-40 on the test folds
 * exp004
     * exp004a
-        * sweep-2023-10-17_13-13-53: training with 3 different seeds --> 3*5*5*5=375 "runs" in total
+        * sweep-2023-10-17_13-13-53: training with 3 different seeds --> 3 *5*5*5=375 "runs" in total
         * sweep-2023-12-19_13-19-23: evaluation of sweep-2023-10-17_13-13-53 on the test folds
     * exp004b
         * sweep-2023-10-17_12-41-35: pretraining for 15 different seeds (different models for each seed and fold)
@@ -124,7 +136,7 @@ Folder structure of the `logs/` directory:
         * sweep-2024-10-08_09-44-30: evaluation of sweep-2024-10-07_20-25-29 on the test folds
 * exp005
     * exp005a
-        * sweep-2024-10-02_10-52-09: training with 3 different seeds --> 3*5*5*5=375 "runs" in total
+        * sweep-2024-10-02_10-52-09: training with 3 different seeds --> 3 *5*5*5=375 "runs" in total
         * sweep-2024-10-05_00-50-56: evaluation of sweep-2024-10-02_10-52-09 on the test folds
     * exp005b
         * sweep-2024-09-20_13-57-42: pretraining for 15 different seeds (different models for each seed and fold)
@@ -140,7 +152,7 @@ Folder structure of the `logs/` directory:
         * sweep-2024-09-23_10-01-09: evaluation of sweep-2024-09-20_20-46-42 on the test folds
 * exp006
     * exp006a
-        * sweep-2024-10-02_10-52-14: training with 3 different seeds --> 3*5*5*5=375 "runs" in total
+        * sweep-2024-10-02_10-52-14: training with 3 different seeds --> 3 *5*5*5=375 "runs" in total
         * sweep-2024-10-04_15-33-59: evaluation of sweep-2024-10-02_10-52-14 on the test folds
     * exp006b
         * sweep-2024-09-20_13-58-02: pretraining for 15 different seeds (different models for each seed and fold)
@@ -171,3 +183,69 @@ Folder structure of the `logs/` directory:
           over-/undersampling to 100,000 samples, 1 random subject in downstream training
         * sweep-2024-09-12_13-51-12: search for number of pretraining samples in [1,10,100], 3 seeds,
           over-/undersampling to 100,000 samples, 1 random subject in downstream training
+* exp008
+    * exp008a
+        * sweep-2025-03-06_17-40-26: SimCLR pretraining for 15 different seeds (different models for each seed and fold)
+        * sweep-2025-03-07_11-05-54: downstream training (FE frozen) based on the pretrained models of
+          exp008a/sweep-2025-03-06_17-40-26; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-07_12-09-50: downstream training (FE frozen) based on the pretrained models of
+          exp008a/sweep-2025-03-06_17-40-26; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-39-34: evaluation of sweep-2025-03-07_11-05-54 on the test folds
+        * sweep-2025-03-10_16-40-59: evaluation of sweep-2025-03-07_12-09-50 on the test folds
+    * exp008b
+        * sweep-2025-03-07_14-05-16: downstream training (FE fine-tuned) based on the pretrained models of
+          exp008a/sweep-2025-03-06_17-40-26; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-07_15-11-06: downstream training (FE fine-tuned) based on the pretrained models of
+          exp008a/sweep-2025-03-06_17-40-26; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-42-31: evaluation of sweep-2025-03-07_14-05-16 on the test folds
+        * sweep-2025-03-10_16-43-54: evaluation of sweep-2025-03-07_15-11-06 on the test folds
+* exp009
+    * exp009a
+        * sweep-2025-03-06_20-02-53: VICReg pretraining for 15 different seeds (different models for each seed and fold)
+        * sweep-2025-03-07_11-58-35: downstream training (FE frozen) based on the pretrained models of
+          exp009a/sweep-2025-03-06_20-02-53; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-07_12-43-56: downstream training (FE frozen) based on the pretrained models of
+          exp009a/sweep-2025-03-06_20-02-53; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-40-12: evaluation of sweep-2025-03-07_11-58-35 on the test folds
+        * sweep-2025-03-10_16-41-44: evaluation of sweep-2025-03-07_12-43-56 on the test folds
+    * exp009b
+        * sweep-2025-03-07_14-07-44: downstream training (FE fine-tuned) based on the pretrained models of
+          exp009a/sweep-2025-03-06_20-02-53; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-07_15-03-58: downstream training (FE fine-tuned) based on the pretrained models of
+          exp009a/sweep-2025-03-06_20-02-53; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-43-04: evaluation of sweep-2025-03-07_14-07-44 on the test folds
+        * sweep-2025-03-10_16-44-28: evaluation of sweep-2025-03-07_15-03-58 on the test folds
+* exp010
+    * exp010a
+        * sweep-2025-03-07_18-02-20: SimCLR pretraining on synthetic data for 15 different seeds (different models for
+          each seed and fold)
+        * sweep-2025-03-10_11-20-20: downstream training (FE frozen) based on the pretrained models of
+          exp010a/sweep-2025-03-07_18-02-20; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-10_12-19-39: downstream training (FE frozen) based on the pretrained models of
+          exp010a/sweep-2025-03-07_18-02-20; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-47-34: evaluation of sweep-2025-03-10_11-20-20 on the test folds
+        * sweep-2025-03-10_16-49-02: evaluation of sweep-2025-03-10_12-19-39 on the test folds
+    * exp010b
+        * sweep-2025-03-10_13-42-46: downstream training (FE fine-tuned) based on the pretrained models of
+          exp010a/sweep-2025-03-07_18-02-20; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-10_14-36-05: downstream training (FE fine-tuned) based on the pretrained models of
+          exp010a/sweep-2025-03-07_18-02-20; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-50-30: evaluation of sweep-2025-03-10_13-42-46 on the test folds
+        * sweep-2025-03-10_16-52-15: evaluation of sweep-2025-03-10_14-36-05 on the test folds
+* exp011
+    * exp011a
+        * sweep-2025-03-07_18-03-31: VICReg pretraining on synthetic data for 15 different seeds (different models for
+          each seed and fold)
+        * sweep-2025-03-10_11-20-28: downstream training (FE frozen) based on the pretrained models of
+          exp011a/sweep-2025-03-07_18-03-31; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-10_12-29-51: downstream training (FE frozen) based on the pretrained models of
+          exp011a/sweep-2025-03-07_18-03-31; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-48-39: evaluation of sweep-2025-03-10_11-20-28 on the test folds
+        * sweep-2025-03-10_16-50-10: evaluation of sweep-2025-03-10_12-29-51 on the test folds
+    * exp011b
+        * sweep-2025-03-10_13-50-06: downstream training (FE fine-tuned) based on the pretrained models of
+          exp011a/sweep-2025-03-07_18-03-31; 3 different seeds; low data regime (one subject, 50 epochs)
+        * sweep-2025-03-10_14-49-42: downstream training (FE fine-tuned) based on the pretrained models of
+          exp011a/sweep-2025-03-07_18-03-31; 3 different seeds; high data regime (all data)
+        * sweep-2025-03-10_16-51-38: evaluation of sweep-2025-03-10_13-50-06 on the test folds
+        * sweep-2025-03-10_16-53-08: evaluation of sweep-2025-03-10_14-49-42 on the test folds

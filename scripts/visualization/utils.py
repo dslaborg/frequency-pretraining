@@ -46,6 +46,7 @@ def parse_result_folder(
     dataset: str,
     reg_filter: str,
     keys_to_read: list[str],
+    sleep_stage: str = "macro",
 ) -> dict[str, list[dict[str, any]]]:
     """
     Parse the parent folder of the separate experiment folders (e.g. exp002) and extract the F1 scores for the
@@ -146,7 +147,7 @@ def parse_result_folder(
                     ]
                 )
                 run_f1_score = results[dataset]["metrics"]["downstream"]["f1_scores"][
-                    "macro"
+                    sleep_stage
                 ][best_epoch]
 
                 # load all manual overrides from the train log file

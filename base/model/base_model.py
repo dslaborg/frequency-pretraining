@@ -104,3 +104,6 @@ class BaseModel(nn.Module):
         """get the parameters of the model for the optimizer"""
         parameters = [{"params": self.parameters()}]
         return parameters
+
+    def num_parameters(self):
+        return sum(p.numel() for p in self.parameters())

@@ -102,6 +102,8 @@ pretrain/fine-tune the models according to exp001a-exp001d, and (iv) evaluate th
        [config/exp004/manual.md](config/exp004/manual.md). The manuals of other experiments follow the same structure.
     3. For Figure 4, you need the results of exp001 and exp007. The manual for exp007 can be found at
        [config/exp007/manual.md](config/exp007/manual.md).
+    4. For Table 1, you need the results of exp008-11. The manual for exp008 can be found at
+       [config/exp008/manual.md](config/exp008/manual.md).
 4. Evaluation on the test set is also described in the manual files.
 
 ## Scripts

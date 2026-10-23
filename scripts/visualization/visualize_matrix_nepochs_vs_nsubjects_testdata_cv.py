@@ -87,7 +87,7 @@ def plot_matrix(
 
 def main():
     dataset = "test"
-    error_mode = "bootstrap"  # 'simple', 'bootstrap', 'error_propagation'
+    error_mode = "bootstrap_paired"  # 'simple', 'bootstrap', 'error_propagation'
 
     # f1_scores format is: {exp_id: [{n_subjects: n_subjects, n_epochs: n_epochs, f1_score: f1_score}, ...]}
     n_epochs_key = "data.downstream.train_dataloader.dataset.data_reducer.n_epochs"
@@ -187,6 +187,21 @@ def main():
                         [
                             np.mean(np.random.choice(exp2_scores, sample_size))
                             - np.mean(np.random.choice(exp1_scores, sample_size))
+                            for _ in range(10_000)
+                        ]
+                    )
+                    diff_mean = np.mean(bootstrap_samples)
+                    diff_std = np.std(bootstrap_samples)
+                elif error_mode == "bootstrap_paired":
+                    # create 10_000 bootstrap samples and calculate their mean and standard deviation
+                    # bootstrap samples are defined as the mean f1 difference between exp1 and exp2 of a random sample of seeds and folds
+                    # difference to "bootstrap": "pair" the runs of exp1 and exp2 by seed and fold and sample the same runs of each experiment
+                    assert len(exp1_scores) == len(exp2_scores)
+                    diffs = np.array([e2 - e1 for e1, e2 in zip(exp1_scores, exp2_scores)])
+                    sample_size = len(diffs)
+                    bootstrap_samples = np.array(
+                        [
+                            np.mean(np.random.choice(diffs, sample_size))
                             for _ in range(10_000)
                         ]
                     )
