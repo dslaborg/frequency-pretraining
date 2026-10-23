@@ -5,7 +5,7 @@ from torch.utils.data import Dataset
 
 from base.config import Config
 from base.data.data_reducer import BaseDataReducer, get_class_distribution
-from base.data.meta_dod import MetaBase
+from base.data.meta_base import MetaBase
 from base.data.normalization import normalize_epoch
 
 logger = getLogger(__name__)

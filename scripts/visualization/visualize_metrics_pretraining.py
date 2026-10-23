@@ -5,6 +5,7 @@ in exp001b.
 The Figure also includes the results of a hyperparmeter exploration in exp007, where the model is pretrained with a
 different number of synthetic samples and fine-tuned with the data of 1 subject from the DODO/H dataset.
 """
+
 import ast
 import json
 import re
@@ -33,18 +34,24 @@ def plot_metrics(results: dict, freq_gt: np.ndarray, freq_pred: np.ndarray):
     valid_metrics = results["valid_pretraining"]["metrics"]["freq"]
     n_epochs = len(train_metrics["acc_freq"])
 
-    f, axes = plt.subplots(2, 2, figsize=(12, 3.5))
+    f, axes = plt.subplots(2, 2, figsize=(12, 7))
     axes = axes.flatten()
 
     # first panel shows the loss curves on the training and validation sets
     axes[0].plot(
         np.arange(n_epochs + 1),
         train_pretraining_metrics["loss"],
-        "--",
+        "-",
         label="Train data",
+        marker="o",
     )
     axes[0].plot(
-        np.arange(n_epochs + 1), valid_metrics["loss"], "-", label="Validation data"
+        np.arange(n_epochs + 1),
+        valid_metrics["loss"],
+        "--",
+        label="Validation data",
+        marker="x",
+        markeredgewidth=2,
     )
     axes[0].legend()
     axes[0].grid()
@@ -57,14 +64,17 @@ def plot_metrics(results: dict, freq_gt: np.ndarray, freq_pred: np.ndarray):
     axes[1].plot(
         np.arange(n_epochs + 1),
         [l for l in train_pretraining_metrics["hamming_freq"]],
-        "--",
+        "-",
         label="Train data",
+        marker="o",
     )
     axes[1].plot(
         np.arange(n_epochs + 1),
         [l for l in valid_metrics["hamming_freq"]],
-        "-",
+        "--",
         label="Validation data",
+        marker="x",
+        markeredgewidth=2,
     )
     axes[1].legend()
     axes[1].grid()
@@ -211,15 +221,18 @@ def plot_last_panel(ax):
             capsize=3,
         )
 
-    ax.set_xlabel("Number of synthetic samples")
+    ax.set_xlabel("Number of different synthetic samples")
     ax.set_ylabel("Macro F1 score")
     ax.xaxis.set_ticks_position("bottom")
     ax.tick_params(which="major", width=1.00, length=4)
     ax.set_xticks(
         [-1 + bar_width / 2] + [i + bar_width / 2 for i in range(len(n_samples))]
     )
-    ax.set_xticklabels(["0"] + [f"{n:,}" for n in n_samples], rotation=30)
-    ax.legend(loc="lower right")
+    ax.set_xticklabels(
+        ["0"] + [f"{int(n):,}" if n >= 10000 else f"{int(n)}" for n in n_samples],
+        rotation=30,
+    )
+    legend = ax.legend(loc="lower right", framealpha=1)
     ax.grid(axis="both", linestyle="--", alpha=0.7)
     ax.set_ylim([0.2, 0.7])
 
@@ -241,6 +254,9 @@ def main():
         pred_freq = np.array([ast.literal_eval(line) for line in f.readlines()])
 
     plot_metrics(results, gt_freq, pred_freq)
+    # increase hspace between subplots
+    plt.subplots_adjust(hspace=0.4)
+    plt.savefig("plot4.svg")
     plt.show()
 
 

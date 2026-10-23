@@ -75,7 +75,7 @@ class ResultTracker:
         file = join(results_dir, f"results.json")
         with open(file, "w") as f:
             f.write(
-                json.dumps(all_metrics, indent=4, sort_keys=True, cls=NumpyEncoder)
+                json.dumps(all_metrics, sort_keys=True, cls=NumpyEncoder)
                 + "\n"
             )
 
@@ -90,6 +90,7 @@ class ResultTracker:
         _cfg = Config.get()
         self.stages = _cfg.data.stages
         self.metrics = {
+            "ssl": {"accs": [], "loss": [], "loss_components": []},
             "freq": {"acc_freq": [], "hamming_freq": [], "loss": []},
             "downstream": {
                 "precisions": {
@@ -107,6 +108,18 @@ class ResultTracker:
         }
         self.markov_matrix = {"actual": [], "predicted": []}
         self.confusion_matrix = []
+
+    def update_ssl_loss(self, loss):
+        self.metrics['ssl']['loss'].append(loss)
+
+    def update_ssl_loss_components(self, loss_components):
+        self.metrics['ssl']['loss_components'].append(loss_components)
+
+    def update_ssl_accuracies(self, accs):
+        self.metrics['ssl']['accs'].append(accs)
+
+    def get_last_ssl_accuracies(self):
+        return self.metrics['ssl']['accs'][-1]
 
     def update_freq_loss(self, loss: float):
         """update the loss of the frequency prediction model"""
